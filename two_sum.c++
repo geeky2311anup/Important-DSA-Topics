@@ -4,7 +4,7 @@ public:
         unordered_map<int,int> mp;
         vector<int> ans;
         for(int i=0;i<nums.size();i++){
-            if(mp.find(target-nums[i])==mp.end()){
+            if(mp.find(target-nums[i])== mp.end()){
                 mp[nums[i]]=i;
             }
             else{
