@@ -50,8 +50,8 @@ public:
 
 
         }
-        if(left>1){
-        start->next=back;
+        if (left>1){
+         start->next=back;
         }
         front->next=end;
         if(left>1){
