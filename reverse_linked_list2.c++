@@ -54,7 +54,7 @@ public:
          start->next=back;
         }
         front->next=end;
-        if(left>1){
+        if (left>1){
             return head;
         }
         else{
