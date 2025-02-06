@@ -3,3 +3,4 @@ isuoper(ch) // used to check upper letter
 isalpha(ch)// used to check a-b ,A-B
 isdigit(ch)// used to check 0-9
 ispunct(ch)// used to check @#$_&-+()/:;!?
+isalnum(ch)//1-9,a-z,A-Z
