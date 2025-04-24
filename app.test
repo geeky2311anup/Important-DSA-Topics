@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+
+class Solution {
+public:
+    int countCompleteSubarrays(std::vector<int>& nums) {
+        int count = 0;
+        std::unordered_map<int, int> elementCounts;
+        int n = nums.size();
+        int right = 0;
+        std::unordered_set<int> distinctElements(nums.begin(), nums.end());
+        int distinctCount = distinctElements.size();
+
+        for (int left = 0; left < n; ++left) {
+            if (left > 0) {
+                int elementToRemove = nums[left - 1];
+                elementCounts[elementToRemove]--;
+                if (elementCounts[elementToRemove] == 0) {
+                    elementCounts.erase(elementToRemove);
+                }
+            }
+
+            while (right < n && elementCounts.size() < distinctCount) {
+                int elementToAdd = nums[right];
+                elementCounts[elementToAdd]++;
+                right++;
+            }
+
+            if (elementCounts.size() == distinctCount) {
+                count += (n - right + 1);
+            }
+        }
+        return count;
+    }
+};
