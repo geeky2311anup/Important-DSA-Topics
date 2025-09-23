@@ -1,12 +1,23 @@
- long long n = nums.size();
-    long long totalPairs = (n * (n - 1)) / 2; 
-    unordered_map<int, long long> freq;
-    long long goodPairs = 0;
+#include <unordered_map>
+#include <map>
+#include <vector>
 
-    for (int i = 0; i < n; i++) {
-        int value = nums[i] - i;
-        goodPairs += freq[value]; 
-        freq[value]++; 
+using namespace std;
+
+class Solution {
+public:
+    long long countBadPairs(vector<int>& nums) {
+        long long n = nums.size();
+        long long totalPairs = (n * (n - 1)) / 2; 
+        unordered_map<int, long long> freq;
+        long long goodPairs = 0;
+
+        for (int i = 0; i < n; i++) {
+            int value = nums[i] - i;
+            goodPairs += freq[value]; 
+            freq[value]++; 
+        }
+
+        return totalPairs - goodPairs;
     }
-
-    return totalPairs - goodPairs;
+};

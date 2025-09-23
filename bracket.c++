@@ -5,6 +5,8 @@
 #include <map>
 
 using namespace std;
+#include <cmath>
+
 
 class Solution {
 public:

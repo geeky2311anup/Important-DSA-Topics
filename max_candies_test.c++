@@ -1,3 +1,7 @@
+#include <vector>
+
+using namespace std;
+
 class Solution {
     public:
         bool canDistribute(vector<int>& candies, long long k, int mid) {

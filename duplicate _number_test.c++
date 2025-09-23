@@ -1,3 +1,7 @@
+#include <vector>
+
+using namespace std;
+
 int findDuplicate(vector<int>& nums) {
     int slow = nums[0], fast = nums[0];
     do {

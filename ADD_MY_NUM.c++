@@ -1,3 +1,9 @@
+#include <algorithm>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
 class Solution {
     public:
         vector<int> findKDistantIndices(vector<int>& nums, int key, int k) {
