@@ -45,3 +45,15 @@ public:
         return ans;
     }
 };
+
+int main() {
+    // Example usage
+    Solution sol;
+    string dominoes = ".L.R...LR..L..";
+    
+    string result = sol.pushDominoes(dominoes);
+    cout << "Input:  " << dominoes << endl;
+    cout << "Output: " << result << endl;
+    
+    return 0;
+}
