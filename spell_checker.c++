@@ -1,3 +1,12 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <cctype>
+
+using namespace std;
+
 class Solution {
     unordered_set<string> exact;
     unordered_map<string, string> lower;
@@ -46,3 +55,19 @@ private:
         return (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u');
     }
 };
+
+int main() {
+    // Example usage
+    Solution sol;
+    vector<string> wordlist = {"KiTe", "kite", "hare", "Hare"};
+    vector<string> queries = {"kite", "Kite", "KiTe", "Hare", "HARE", "Hear", "hear", "keti", "keet", "keto"};
+    
+    vector<string> result = sol.spellchecker(wordlist, queries);
+    
+    cout << "Spell checker results:" << endl;
+    for (int i = 0; i < queries.size(); i++) {
+        cout << queries[i] << " -> " << result[i] << endl;
+    }
+    
+    return 0;
+}
