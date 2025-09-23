@@ -1,3 +1,9 @@
+#include <algorithm>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
 class Solution {
     public:
         bool checkValidCuts(int n, vector<vector<int>>& rectangles) {

@@ -1,3 +1,7 @@
+#include <vector>
+
+using namespace std;
+
 class Solution {
   public:
     // Function to find minimum number of jumps to reach the end of the array.

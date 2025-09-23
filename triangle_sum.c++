@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <iostream>
+#include <vector>
+
 
 static const int MAXN = 1'000'000;
 

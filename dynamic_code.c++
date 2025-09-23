@@ -1,3 +1,10 @@
+#include <algorithm>
+#include <cmath>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
 class Solution {
     private:
         int F[30][30][30], G[30][30][30];

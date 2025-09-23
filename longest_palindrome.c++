@@ -1,3 +1,8 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
 class Solution {
     public:
              int is_palindrome(string &s,int i,int j,vector<vector<int>> &dp){

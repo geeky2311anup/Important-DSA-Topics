@@ -4,6 +4,8 @@
 #include <iostream>
 
 using namespace std;
+#include <cmath>
+
 
 class State {
     public:

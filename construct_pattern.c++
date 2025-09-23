@@ -1,3 +1,8 @@
+#include <string>
+#include <stack>
+
+using namespace std;
+
 int n = pattern.size();
 stack<int> st;
 string result = "";

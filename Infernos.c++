@@ -1,5 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <vector>
+
 
 int main() {
     ios::sync_with_stdio(false);

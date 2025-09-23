@@ -1,3 +1,7 @@
+#include <vector>
+
+using namespace std;
+
 class Solution {
     public:
         // Find the number of valid pairs by greedy approach

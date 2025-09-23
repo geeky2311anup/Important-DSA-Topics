@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
 using namespace std;
+#include <algorithm>
+#include <cmath>
+
 
 class Solution {
 public:

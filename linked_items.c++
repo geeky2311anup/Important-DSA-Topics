@@ -2,6 +2,8 @@
 #include <sstream>
 #include <cctype>
 using namespace std;
+#include <string>
+
 
 // Function to convert a word to title case
 string convertToTitleCase(const string& word) {

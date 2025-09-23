@@ -1,5 +1,8 @@
 #include <iostream>
 #include <algorithm>
+#include <cmath>
+
+using namespace std;
 
 void solve() {
     int n, a;

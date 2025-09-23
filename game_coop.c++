@@ -7,6 +7,11 @@
 #define pii pair<int, int>
 #define rep(i, a, b) for(int i = (a); i < (b); i++)
 using namespace std;
+#include <iostream>
+#include <queue>
+#include <utility>
+#include <vector>
+
 template<typename T>
 using minpq = priority_queue<T, vector<T>, greater<T>>;
  

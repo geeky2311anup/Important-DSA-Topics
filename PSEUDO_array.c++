@@ -1,5 +1,11 @@
 #include "bits/stdc++.h"
 using namespace std;
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <utility>
+#include <vector>
+
 #define ll long long
 #define pb push_back
 #define all(_obj) _obj.begin(),_obj.end()
