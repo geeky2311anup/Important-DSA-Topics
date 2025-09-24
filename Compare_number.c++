@@ -1,0 +1,31 @@
+ class Solution {
+public:
+    // Compare two version strings like "1.01" and "1.001" -> 0 (equal)
+    static int compareVersion(const std::string& version1, const std::string& version2) {
+        size_t i = 0, j = 0;
+        const size_t n1 = version1.size(), n2 = version2.size();
+
+        while (i < n1 || j < n2) {
+            long v1 = 0;
+            while (i < n1 && version1[i] != '.') {
+                v1 = v1 * 10 + (version1[i] - '0');
+                ++i;
+            }
+
+            long v2 = 0;
+            while (j < n2 && version2[j] != '.') {
+                v2 = v2 * 10 + (version2[j] - '0');
+                ++j;
+            }
+
+            if (v1 < v2) return -1;
+            if (v1 > v2) return 1;
+
+            // skip the dot if present
+            if (i < n1 && version1[i] == '.') ++i;
+            if (j < n2 && version2[j] == '.') ++j;
+        }
+
+        return 0;
+    }
+};
