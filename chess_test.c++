@@ -2,6 +2,8 @@
 #include <cmath>
 
 using namespace std;
+#include <algorithm>
+
 
 int main() {
     int t;

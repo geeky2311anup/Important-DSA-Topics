@@ -1,3 +1,10 @@
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
+using namespace std;
+
 class Solution {
     unordered_set<string> exact;
     unordered_map<string, string> lower;

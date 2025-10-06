@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <unordered_map>
+#include <vector>
+
 
 class MovieRentingSystem {
     struct Node {
