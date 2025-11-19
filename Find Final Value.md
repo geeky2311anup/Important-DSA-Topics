@@ -84,8 +84,6 @@ Space Complexity: O(1)
 ✅ Summary
 Only values of the form k × 2^p matter
 
-Convert them to powers of 2 by dividing by k
 
-Track seen powers using a bitmask
 
 Final answer = k × 2^firstMissingPower
