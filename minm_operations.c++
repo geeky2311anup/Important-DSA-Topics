@@ -1,3 +1,10 @@
+#include <algorithm>
+#include <cmath>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
 class Solution {
 public:
     int minOperations(vector<int>& nums, int k) {

@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+#include <iostream>
+
 
 bool primeGen(int n) {
     for (int i = 2; i <= sqrt(n); i++) {

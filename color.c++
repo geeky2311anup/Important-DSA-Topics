@@ -1,3 +1,7 @@
+#include <iostream>
+
+using namespace std;
+
 //By TheOneYouWant
 #pragma GCC optimize ("-O2")
 #include <bits/stdc++.h>
