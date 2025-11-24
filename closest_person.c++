@@ -1,3 +1,8 @@
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
 class Solution {
 public:
     int findClosest(int numA, int numB, int target) {

@@ -1,5 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
+
 
 // Spreadsheet class as requested
 class Spreadsheet {
