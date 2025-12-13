@@ -1,3 +1,8 @@
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
+
 class FindSumPairs {
     private:
         vector<int> nums1, nums2;

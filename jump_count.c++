@@ -4,6 +4,8 @@
 #include <climits>
 
 using namespace std;
+#include <cmath>
+
 
 class Solution {
 public:

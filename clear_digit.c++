@@ -1,3 +1,9 @@
+#include <string>
+#include <stack>
+#include <cctype>
+
+using namespace std;
+
 class Solution {
 public:
     string clearDigits(string s) {

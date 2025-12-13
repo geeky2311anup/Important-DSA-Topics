@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+#include <iostream>
+
 
 #define endl "\n"
 const int N = 1e3 + 5;

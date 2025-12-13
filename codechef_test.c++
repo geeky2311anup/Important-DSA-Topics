@@ -2,6 +2,9 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
+#include <cmath>
+#include <utility>
+
 
 void maxGuestsAtHotel(int N, vector<int>& arrivals, vector<int>& departures) {
     vector<pair<int, int>> events;
