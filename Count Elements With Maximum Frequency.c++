@@ -1,3 +1,10 @@
+#include <algorithm>
+#include <cmath>
+#include <unordered_map>
+#include <vector>
+
+using namespace std;
+
 class Solution {
 public:
     int maxFrequencyElements(vector<int>& nums) {

@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+using namespace std;
+
 
 void heapify(std::vector<int>& arr, int n, int i) {
     int largest = i;

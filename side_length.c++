@@ -4,6 +4,9 @@
 #include <algorithm>
 
 using namespace std;
+#include <cmath>
+#include <functional>
+
 
 class Solution {
 public:

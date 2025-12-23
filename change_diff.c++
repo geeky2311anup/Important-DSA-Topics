@@ -1,3 +1,10 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
 class Solution {
     public:
         int maxDistance(string s, int k) {

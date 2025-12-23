@@ -1,5 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+
 int A [156];
 int B [156];
 int C [156];
