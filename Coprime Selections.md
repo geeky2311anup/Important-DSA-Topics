@@ -55,12 +55,10 @@ This is a classic **state-compression DP on GCD**.
 ### 1) DP state definition  
 > `current[g]` = number of ways to pick elements so far such that their GCD is `g`.
 
-Start with:
-current = { 0 → 1 }
+> Start with:
+> current = { 0 → 1 }
 
-yaml
-Copy code
-Why `0`?
+> Why `0`?
 > Because `gcd(x, 0) = x` — perfect neutral start.
 
 ---
@@ -121,8 +119,6 @@ Matrix:
 [4, 9]
 ]
 
-markdown
-Copy code
 
 Row 1:
 - Pick 2 → gcd(0,2)=2
@@ -141,8 +137,7 @@ Row 2:
 Final:
 {2:1, 1:2, 3:1}
 
-pgsql
-Copy code
+
 
 Answer = **2** (two coprime selections)
 
