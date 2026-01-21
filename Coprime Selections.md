@@ -159,42 +159,33 @@ Efficient where brute force would die instantly.
 ## 💻 Code
 
 ```java
-class Solution {
+#include <bits/stdc++.h>
+using namespace std;
 
-    public int countCoprime(int[][] matrix) {
-        final int MOD = 1_000_000_007;
+int main() {
+    int tests;                  // Number of test cases
+    cin >> tests;
 
-        Map<Integer, Integer> current = new HashMap<>();
-        current.put(0, 1);   // base gcd state
+    while (tests--) {
+        int m, p;
+        cin >> m >> p;          // Initial value m and additional value p
 
-        for (int[] row : matrix) {
-            Map<Integer, Integer> nextState = new HashMap<>();
+        int count = 0;          // Tracks how many times m can be increased
 
-            for (int val : row) {
-                for (Map.Entry<Integer, Integer> entry : current.entrySet()) {
-                    int prevGcd = entry.getKey();
-                    int ways = entry.getValue();
+        // Keep increasing m while constraints are satisfied
+        while (m < 299) {
+            // Check if the next increment keeps total within limit
+            if (m + p + 20 * (count + 1) > 1000)
+                break;
 
-                    int newGcd = computeGcd(val, prevGcd);
-                    nextState.put(
-                        newGcd,
-                        (nextState.getOrDefault(newGcd, 0) + ways) % MOD
-                    );
-                }
-            }
-
-            current = nextState;
+            m++;                // Increase m
+            count++;            // Increase count of valid operations
         }
 
-        return current.getOrDefault(1, 0);
+        // Output the maximum number of valid operations
+        cout << count << "\n";
     }
 
-    private int computeGcd(int x, int y) {
-        while (y != 0) {
-            int rem = x % y;
-            x = y;
-            y = rem;
-        }
-        return x;
-    }
+    return 0;                   // Program ends successfully
 }
+
