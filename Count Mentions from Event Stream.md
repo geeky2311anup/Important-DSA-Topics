@@ -238,7 +238,3 @@ class Solution {
     }
 }
 
-
-        return result;
-    }
-}
