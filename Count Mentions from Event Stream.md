@@ -121,66 +121,123 @@ Final result: counts reflect ALL at 10, HERE at 69, and id1 at 70 with proper of
 import java.util.*;
 
 class Solution {
+
+    /**
+     * Counts how many times each user is mentioned across MESSAGE events.
+     *
+     * Rules:
+     * - ALL  → mentions every user
+     * - HERE → mentions only users who are currently online
+     * - idX  → mentions user with id X
+     * - OFFLINE event makes a user offline for the next 60 seconds
+     *
+     * @param numberOfUsers total number of users
+     * @param events list of events in format [TYPE, TIMESTAMP, DATA]
+     * @return array where result[i] is mention count of user i
+     */
     public int[] countMentions(int numberOfUsers, List<List<String>> events) {
-        // group incoming events by timestamp (ascending)
-        TreeMap<Integer, List<List<String>>> timeBuckets = new TreeMap<>();
-        for (List<String> ev : events) {
-            int t = Integer.parseInt(ev.get(1));
-            timeBuckets.computeIfAbsent(t, k -> new ArrayList<>()).add(ev);
+
+        /* 
+           Step 1: Group all events by timestamp.
+           TreeMap keeps timestamps sorted automatically.
+        */
+        TreeMap<Integer, List<List<String>>> eventsByTime = new TreeMap<>();
+        for (List<String> event : events) {
+            int time = Integer.parseInt(event.get(1));
+            eventsByTime
+                .computeIfAbsent(time, k -> new ArrayList<>())
+                .add(event);
         }
 
-        int[] result = new int[numberOfUsers];
-        boolean[] online = new boolean[numberOfUsers];
-        int[] blockedUntil = new int[numberOfUsers];
-        Arrays.fill(online, true); // everyone starts online
+        // Result array to store mention count per user
+        int[] mentions = new int[numberOfUsers];
 
-        for (Map.Entry<Integer, List<List<String>>> entry : timeBuckets.entrySet()) {
-            int now = entry.getKey();
+        // Tracks whether a user is currently online
+        boolean[] isOnline = new boolean[numberOfUsers];
+
+        // Stores the time until which a user remains offline
+        int[] offlineUntil = new int[numberOfUsers];
+
+        // Initially, all users are online
+        Arrays.fill(isOnline, true);
+
+        /*
+           Step 2: Process events timestamp by timestamp
+        */
+        for (Map.Entry<Integer, List<List<String>>> entry : eventsByTime.entrySet()) {
+
+            int currentTime = entry.getKey();
             List<List<String>> batch = entry.getValue();
 
-            // first: reactivate users whose offline period expired at or before `now`
-            for (int u = 0; u < numberOfUsers; u++) {
-                if (!online[u] && blockedUntil[u] <= now) {
-                    online[u] = true;
-                    blockedUntil[u] = 0;
+            /*
+               Step 2a: Reactivate users whose offline duration has expired
+            */
+            for (int user = 0; user < numberOfUsers; user++) {
+                if (!isOnline[user] && offlineUntil[user] <= currentTime) {
+                    isOnline[user] = true;
+                    offlineUntil[user] = 0;
                 }
             }
 
-            // apply OFFLINE events (they take effect immediately in this time slot)
-            for (List<String> ev : batch) {
-                if ("OFFLINE".equals(ev.get(0))) {
-                    int id = Integer.parseInt(ev.get(2));
-                    if (id >= 0 && id < numberOfUsers) {
-                        online[id] = false;
-                        blockedUntil[id] = now + 60; // offline for next 60 seconds
+            /*
+               Step 2b: Apply OFFLINE events immediately
+            */
+            for (List<String> event : batch) {
+                if ("OFFLINE".equals(event.get(0))) {
+                    int userId = Integer.parseInt(event.get(2));
+                    if (userId >= 0 && userId < numberOfUsers) {
+                        isOnline[userId] = false;
+                        offlineUntil[userId] = currentTime + 60;
                     }
                 }
             }
 
-            // handle MESSAGE events and count mentions
-            for (List<String> ev : batch) {
-                if (!"MESSAGE".equals(ev.get(0))) continue;
+            /*
+               Step 2c: Process MESSAGE events and count mentions
+            */
+            for (List<String> event : batch) {
+                if (!"MESSAGE".equals(event.get(0))) continue;
 
-                String mentionText = ev.get(2);
-                if (mentionText == null || mentionText.isEmpty()) continue;
+                String message = event.get(2);
+                if (message == null || message.isEmpty()) continue;
 
-                String[] tokens = mentionText.split("\\s+");
-                for (String tok : tokens) {
-                    if ("ALL".equals(tok)) {
-                        for (int u = 0; u < numberOfUsers; u++) result[u]++;
-                    } else if ("HERE".equals(tok)) {
+                String[] tokens = message.split("\\s+");
+
+                for (String token : tokens) {
+
+                    // Mention everyone
+                    if ("ALL".equals(token)) {
                         for (int u = 0; u < numberOfUsers; u++) {
-                            if (online[u]) result[u]++;
+                            mentions[u]++;
                         }
-                    } else if (tok.startsWith("id")) {
+                    }
+
+                    // Mention only online users
+                    else if ("HERE".equals(token)) {
+                        for (int u = 0; u < numberOfUsers; u++) {
+                            if (isOnline[u]) mentions[u]++;
+                        }
+                    }
+
+                    // Mention specific user idX
+                    else if (token.startsWith("id")) {
                         try {
-                            int id = Integer.parseInt(tok.substring(2));
-                            if (id >= 0 && id < numberOfUsers) result[id]++;
-                        } catch (NumberFormatException ignore) { }
+                            int id = Integer.parseInt(token.substring(2));
+                            if (id >= 0 && id < numberOfUsers) {
+                                mentions[id]++;
+                            }
+                        } catch (NumberFormatException ignored) {
+                            // Ignore malformed id tokens
+                        }
                     }
                 }
             }
         }
+
+        return mentions;
+    }
+}
+
 
         return result;
     }
