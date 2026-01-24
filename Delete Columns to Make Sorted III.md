@@ -1,55 +1,57 @@
 class Solution {
-    public int minDeletionSize(String[] strs) {
+    public int minDeletionSize(String[] words) {
 
-        // Number of rows (strings)
-        int rows = strs.length;
+        // Total number of strings (rows)
+        int n = words.length;
 
-        // Number of columns (length of each string)
-        int cols = strs[0].length();
+        // Length of each string (number of columns)
+        int m = words[0].length();
 
         /*
-           keep[j] represents the length of the longest valid
-           non-decreasing column sequence ending at column j.
+           dp[c] stores the length of the longest
+           non-decreasing column sequence that
+           ENDS at column c.
         */
-        int[] keep = new int[cols];
+        int[] dp = new int[m];
 
-        // Initialize all values to 1 because each column alone is always valid
-        Arrays.fill(keep, 1);
+        // Every column alone is always valid
+        Arrays.fill(dp, 1);
 
-        // Stores the maximum number of columns we can keep
-        int best = 1;
+        // Keeps track of the maximum columns we can keep
+        int maxKeep = 1;
 
-        // Try every column as the ending column
-        for (int j = 0; j < cols; j++) {
+        // Treat each column as the ending column
+        for (int curr = 0; curr < m; curr++) {
 
             // Try to extend sequences ending at previous columns
-            for (int i = 0; i < j; i++) {
+            for (int prev = 0; prev < curr; prev++) {
 
-                boolean valid = true;
+                boolean canAttach = true;
 
-                // Check all rows to ensure non-decreasing order
-                for (int r = 0; r < rows; r++) {
-                    // If any row violates ordering, extension is not allowed
-                    if (strs[r].charAt(i) > strs[r].charAt(j)) {
-                        valid = false;
+                // Check all rows to ensure column order is non-decreasing
+                for (int row = 0; row < n; row++) {
+
+                    // If any row violates order, this transition is invalid
+                    if (words[row].charAt(prev) > words[row].charAt(curr)) {
+                        canAttach = false;
                         break;
                     }
                 }
 
-                // If column j can follow column i, update DP state
-                if (valid) {
-                    keep[j] = Math.max(keep[j], keep[i] + 1);
+                // If column `curr` can follow `prev`, update DP value
+                if (canAttach) {
+                    dp[curr] = Math.max(dp[curr], dp[prev] + 1);
                 }
             }
 
-            // Update global maximum sequence length
-            best = Math.max(best, keep[j]);
+            // Update the global maximum sequence length
+            maxKeep = Math.max(maxKeep, dp[curr]);
         }
 
         /*
-           Minimum deletions required =
+           Minimum deletions needed =
            total columns - maximum columns that can be kept
         */
-        return cols - best;
+        return m - maxKeep;
     }
 }
