@@ -151,64 +151,84 @@ class Solution {
 
     public int latestDayToCross(int rows, int cols, int[][] cells) {
 
+        // Union-Find with extra 2 nodes for left and right virtual borders
         UnionFind uf = new UnionFind(rows * cols + 2);
+
+        // Grid to mark land (1 = land, 0 = water)
         int[][] land = new int[rows][cols];
 
-        // 8-direction connectivity
+        // All 8 possible directions (including diagonals)
         int[][] directions = {
             {0, 1}, {0, -1}, {1, 0}, {-1, 0},
             {1, 1}, {1, -1}, {-1, 1}, {-1, -1}
         };
 
+        // Virtual nodes representing left and right borders
         int leftNode = 0;
         int rightNode = rows * cols + 1;
 
+        // Process cells day by day
         for (int day = 0; day < rows * cols; day++) {
 
+            // Convert to 0-based index
             int r = cells[day][0] - 1;
             int c = cells[day][1] - 1;
+
+            // Mark current cell as land
             land[r][c] = 1;
 
+            // Unique ID for this cell in Union-Find
             int id = r * cols + c + 1;
 
-            // connect with neighboring land cells
+            // Connect current land cell with all neighboring land cells
             for (int[] dir : directions) {
                 int nr = r + dir[0];
                 int nc = c + dir[1];
+
+                // Check bounds and if neighbor is land
                 if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && land[nr][nc] == 1) {
                     uf.connect(id, nr * cols + nc + 1);
                 }
             }
 
-            // connect borders
+            // If cell is on left border, connect to left virtual node
             if (c == 0) uf.connect(leftNode, id);
+
+            // If cell is on right border, connect to right virtual node
             if (c == cols - 1) uf.connect(rightNode, id);
 
-            // check if left and right borders are connected
+            // If left and right borders are connected, crossing is blocked
             if (uf.find(leftNode) == uf.find(rightNode)) {
                 return day;
             }
         }
 
+        // If never connected (shouldn't really happen)
         return -1;
     }
 }
 
-/* ---------- Union Find ---------- */
+/* ---------- Union Find (Disjoint Set) ---------- */
 class UnionFind {
 
+    // parent[i] stores parent of node i
     private int[] parent;
+
+    // weight[i] stores size of the tree rooted at i
     private int[] weight;
 
     public UnionFind(int n) {
         parent = new int[n];
         weight = new int[n];
+
+        // Initially, each node is its own parent
         for (int i = 0; i < n; i++) {
             parent[i] = i;
             weight[i] = 1;
         }
     }
 
+    // Find root of x with path compression
     public int find(int x) {
         if (parent[x] != x) {
             parent[x] = find(parent[x]);
@@ -216,12 +236,15 @@ class UnionFind {
         return parent[x];
     }
 
+    // Union two nodes using union by size
     public void connect(int a, int b) {
         int pa = find(a);
         int pb = find(b);
 
+        // Already connected
         if (pa == pb) return;
 
+        // Attach smaller tree to larger tree
         if (weight[pa] > weight[pb]) {
             int temp = pa;
             pa = pb;
