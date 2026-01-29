@@ -5,29 +5,48 @@ class Solution {
 public:
     int maxDistinctElements(vector<int>& arr, int k) {
         int n = arr.size();
-        sort(arr.begin(), arr.end());  // sort to handle range adjustments smoothly
 
-        int lastUsed = INT_MIN;  // track the last distinct number placed
+        // Sort the array so we can greedily assign values
+        // in increasing order without breaking distinctness
+        sort(arr.begin(), arr.end());
+
+        // lastUsed keeps track of the last distinct value we assigned
+        // Initialize to very small so first element always works
+        int lastUsed = INT_MIN;
+
+        // Count of maximum distinct elements we can form
         int distinctCount = 0;
 
+        // Traverse each element
         for (int i = 0; i < n; i++) {
-            // find the minimum possible starting value within allowed adjustment range
+
+            // Each element arr[i] can be adjusted within this range
             int lowLimit = arr[i] - k;
             int highLimit = arr[i] + k;
 
+            // Case 1:
+            // If last used value is smaller than the lowest allowed value,
+            // we can safely assign lowLimit as a new distinct value
             if (lastUsed < lowLimit) {
-                // we can freely assign the smallest valid value
                 lastUsed = lowLimit;
                 distinctCount++;
-            } 
+            }
+
+            // Case 2:
+            // If lastUsed is inside the allowed range,
+            // we try to increment it by 1 to keep distinctness
             else if (lastUsed < highLimit) {
-                // we can still move 1 step ahead within the valid range
                 lastUsed++;
                 distinctCount++;
             }
-            // else → if lastUsed >= highLimit, skip (cannot create new distinct number)
+
+            // Case 3:
+            // If lastUsed >= highLimit,
+            // no valid new distinct value can be assigned
+            // so we skip this element
         }
 
+        // Return the maximum number of distinct elements possible
         return distinctCount;
     }
 };
