@@ -71,6 +71,35 @@ Each recursive split keeps the tree balanced, unlike most group projects.
         }
     }
 
+//c++
+    class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return buildTree(nums, 0, nums.size() - 1);
+    }
+
+private:
+    TreeNode* buildTree(vector<int>& arr, int start, int end) {
+        // stop recursion when range becomes invalid
+        if (start > end) {
+            return nullptr;
+        }
+
+        // choose middle element to keep the BST height-balanced
+        int midIndex = start + (end - start) / 2;
+
+        // create root node using the middle value
+        TreeNode* node = new TreeNode(arr[midIndex]);
+
+        // recursively build left and right subtrees
+        node->left = buildTree(arr, start, midIndex - 1);
+        node->right = buildTree(arr, midIndex + 1, end);
+
+        return node;
+    }
+};
+
+
 ------------------------------------------------------------
 
 ### Final Thought
