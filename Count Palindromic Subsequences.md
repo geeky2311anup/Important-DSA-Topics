@@ -89,8 +89,9 @@ import java.util.*;
 class Solution {
     public int countPalindromicSubsequence(String s) {
         int n = s.length();
-        char[] arr = s.toCharArray();
+        char[] arr = s.toCharArray(); // Convert string to char array for faster access
 
+        // Arrays to store first (leftmost) and last (rightmost) index of each character
         int[] leftMost = new int[26];
         int[] rightMost = new int[26];
         Arrays.fill(leftMost, -1);
@@ -100,30 +101,34 @@ class Solution {
         for (int i = 0; i < n; i++) {
             int idx = arr[i] - 'a';
             if (leftMost[idx] == -1) {
-                leftMost[idx] = i;
+                leftMost[idx] = i; // first time seeing this character
             }
-            rightMost[idx] = i;
+            rightMost[idx] = i; // keep updating to get the last occurrence
         }
 
         int count = 0;
 
-        // For each character as the first and last char of palindrome
+        // Try each character as the first and last character of a palindrome
         for (int c = 0; c < 26; c++) {
             int l = leftMost[c];
             int r = rightMost[c];
 
+            // Valid palindrome needs at least one character in between
             if (l != -1 && l < r) {
-                int mask = 0;
-                // Collect all distinct middle characters between l and r
+                int mask = 0; // bitmask to track distinct middle characters
+
+                // Scan characters between l and r
                 for (int mid = l + 1; mid < r; mid++) {
                     int midIdx = arr[mid] - 'a';
-                    mask |= (1 << midIdx);
+                    mask |= (1 << midIdx); // mark this character as seen
                 }
-                // Number of set bits = number of distinct middle chars
+
+                // Count distinct middle characters
                 count += Integer.bitCount(mask);
             }
         }
 
-        return count;
+        return count; // total number of unique palindromic subsequences of length 3
     }
 }
+
