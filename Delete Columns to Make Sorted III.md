@@ -1,57 +1,67 @@
 class Solution {
     public int minDeletionSize(String[] words) {
 
-        // Total number of strings (rows)
+        // Number of rows (strings)
         int n = words.length;
 
-        // Length of each string (number of columns)
+        // Number of columns (length of each string)
         int m = words[0].length();
 
         /*
-           dp[c] stores the length of the longest
-           non-decreasing column sequence that
-           ENDS at column c.
-        */
+         * dp[c] = length of the longest valid
+         * non-decreasing column sequence
+         * that ends at column index c
+         */
         int[] dp = new int[m];
 
-        // Every column alone is always valid
+        // Base case: each column by itself is always valid
         Arrays.fill(dp, 1);
 
-        // Keeps track of the maximum columns we can keep
+        // Stores maximum number of columns we can keep
         int maxKeep = 1;
 
-        // Treat each column as the ending column
+        /*
+         * Treat each column as the "ending column"
+         * and try to extend sequences from previous columns
+         */
         for (int curr = 0; curr < m; curr++) {
 
-            // Try to extend sequences ending at previous columns
+            // Check all columns before curr
             for (int prev = 0; prev < curr; prev++) {
 
                 boolean canAttach = true;
 
-                // Check all rows to ensure column order is non-decreasing
+                /*
+                 * Verify ordering constraint:
+                 * For every row, characters in column `prev`
+                 * must be <= characters in column `curr`
+                 */
                 for (int row = 0; row < n; row++) {
 
-                    // If any row violates order, this transition is invalid
+                    // Violation found → cannot chain prev → curr
                     if (words[row].charAt(prev) > words[row].charAt(curr)) {
                         canAttach = false;
                         break;
                     }
                 }
 
-                // If column `curr` can follow `prev`, update DP value
+                /*
+                 * If curr column can follow prev column,
+                 * update longest valid sequence ending at curr
+                 */
                 if (canAttach) {
                     dp[curr] = Math.max(dp[curr], dp[prev] + 1);
                 }
             }
 
-            // Update the global maximum sequence length
+            // Update global maximum sequence length
             maxKeep = Math.max(maxKeep, dp[curr]);
         }
 
         /*
-           Minimum deletions needed =
-           total columns - maximum columns that can be kept
-        */
+         * Minimum deletions required =
+         * total columns - maximum columns we can keep
+         */
         return m - maxKeep;
     }
 }
