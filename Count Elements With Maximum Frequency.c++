@@ -1,27 +1,32 @@
 class Solution {
 public:
     int maxFrequencyElements(vector<int>& nums) {
-        // Count how many times each number appears
+        // Phase 1: Frequency Mapping
+        // We use an unordered_map to store the count of each unique number.
+        // Key: the number from the array, Value: how many times it appears.
         unordered_map<int, int> countMap;
         for (int value : nums) {
             countMap[value]++;
         }
 
-        // Find the highest frequency
+        // Phase 2: Identifying the Peak Frequency
+        // We iterate through the map to find the largest frequency value present.
         int highestFreq = 0;
-        for (auto [value, freq] : countMap) {
+        for (auto const& [value, freq] : countMap) {
             highestFreq = max(highestFreq, freq);
         }
 
-        // Count how many numbers have that highest frequency
+        // Phase 3: Summing the Total Occurrences
+        // We count how many distinct numbers reached that 'highestFreq'.
         int numWithHighestFreq = 0;
-        for (auto [value, freq] : countMap) {
+        for (auto const& [value, freq] : countMap) {
             if (freq == highestFreq) {
                 numWithHighestFreq++;
             }
         }
 
-        // Each contributes its frequency count
+        // Final Calculation:
+        // Total count = (Number of elements with max frequency) * (The max frequency value)
         return numWithHighestFreq * highestFreq;
     }
 };
