@@ -138,21 +138,32 @@ Copy code
 class Solution {
     public int[] plusOne(int[] a) {
 
+        // We assume there will be a carry when we add 1
         boolean carry = true;
 
+        // Traverse the array from the last digit to the first
         for (int i = a.length - 1; i >= 0 && carry; i--) {
+            // If the digit is 9, it becomes 0 and carry continues
             if (a[i] == 9) {
                 a[i] = 0;
             } else {
+                // Otherwise, just increment the digit
                 a[i]++;
+                // No more carry needed
                 carry = false;
             }
         }
 
+        // If there is no carry left, return the updated array
         if (!carry) return a;
 
+        // If carry still exists, it means all digits were 9
+        // Example: 999 + 1 = 1000
+        // Create a new array with one extra digit
         int[] res = new int[a.length + 1];
+        // Set the first digit to 1, rest are already 0 by default
         res[0] = 1;
+
         return res;
     }
 }
