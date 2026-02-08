@@ -27,14 +27,20 @@ class Solution {
 
     // Helper: add value to bucket map
     private static void add(TreeMap<Integer, TreeSet<Integer>> m, int f, int v) {
+        // Insert value v into frequency bucket f
         m.computeIfAbsent(f, k -> new TreeSet<>()).add(v);
     }
 
     // Helper: remove value from bucket map
     private static void remove(TreeMap<Integer, TreeSet<Integer>> m, int f, int v) {
+        // Get the set for frequency f
         TreeSet<Integer> s = m.get(f);
         if (s == null) return;
+
+        // Remove value
         s.remove(v);
+
+        // If no values left in this frequency bucket, remove the key
         if (s.isEmpty()) m.remove(f);
     }
 
@@ -45,8 +51,9 @@ class Solution {
      */
     private static int[] best(TreeMap<Integer, TreeSet<Integer>> m) {
         if (m.isEmpty()) return null;
-        int f = m.lastKey();             // max frequency
-        int v = m.get(f).last();         // max value for that frequency
+
+        int f = m.lastKey();             // largest frequency
+        int v = m.get(f).last();         // largest value in that frequency
         return new int[]{f, v};
     }
 
@@ -57,8 +64,9 @@ class Solution {
      */
     private static int[] worst(TreeMap<Integer, TreeSet<Integer>> m) {
         if (m.isEmpty()) return null;
-        int f = m.firstKey();            // min frequency
-        int v = m.get(f).first();        // min value for that frequency
+
+        int f = m.firstKey();            // smallest frequency
+        int v = m.get(f).first();        // smallest value in that frequency
         return new int[]{f, v};
     }
 
@@ -67,9 +75,13 @@ class Solution {
         int[] b = best(poolBuckets);
         if (b == null) return;
 
+        // Remove from pool
         remove(poolBuckets, b[0], b[1]);
+
+        // Add to top
         add(topBuckets, b[0], b[1]);
 
+        // Update counters
         picked++;
         pickedSum += 1L * b[0] * b[1];
     }
@@ -79,9 +91,13 @@ class Solution {
         int[] w = worst(topBuckets);
         if (w == null) return;
 
+        // Remove from top
         remove(topBuckets, w[0], w[1]);
+
+        // Add to pool
         add(poolBuckets, w[0], w[1]);
 
+        // Update counters
         picked--;
         pickedSum -= 1L * w[0] * w[1];
     }
@@ -90,7 +106,10 @@ class Solution {
      * Ensure exactly x elements are in topBuckets
      */
     private void rebalance(int x) {
+        // If too many elements in top, move worst to pool
         while (picked > x) moveTopToPool();
+
+        // If too few elements in top, move best from pool
         while (picked < x && !poolBuckets.isEmpty()) movePoolToTop();
     }
 
@@ -113,10 +132,12 @@ class Solution {
         // Remove old frequency placement
         if (f > 0) {
             if (inTop(f, v)) {
+                // If element was in top, remove and update sum
                 remove(topBuckets, f, v);
                 picked--;
                 pickedSum -= 1L * f * v;
             } else {
+                // Otherwise, remove from pool
                 remove(poolBuckets, f, v);
             }
         }
@@ -160,6 +181,7 @@ class Solution {
         f--;
 
         if (f == 0) {
+            // Completely remove value
             cnt.remove(v);
         } else {
             // Put downgraded version into pool
@@ -197,7 +219,7 @@ class Solution {
         // Slide the window
         for (int l = 1, r = k; r < n; l++, r++) {
             removeVal(nums[l - 1], x);   // remove left element
-            addVal(nums[r], x);         // add right element
+            addVal(nums[r], x);          // add right element
             res[l] = pickedSum;
         }
 
