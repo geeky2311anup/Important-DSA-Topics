@@ -82,16 +82,29 @@ Given typical constraints (n up to a few hundreds), this is acceptable and simpl
 ```java
 class Solution {
     public int countTriples(int n) {
-        int c = 0;
+        int c = 0; // counter for valid triples
+
+        // i is the first number of the triple
         for (int i = 1; i <= n - 2; i++) {
+
+            // j is the second number, always greater than i
             for (int j = i + 1; j <= n - 1; j++) {
+
+                // k is the third number, always greater than j
                 for (int k = j + 1; k <= n; k++) {
+
+                    // check Pythagorean condition: i^2 + j^2 = k^2
                     if (i * i + j * j == k * k) {
-                        c += 2; // (i,j,k) and (j,i,k)
+
+                        // count both (i, j, k) and (j, i, k)
+                        c += 2;
                     }
                 }
             }
         }
+
+        // return total count of valid triples
         return c;
     }
 }
+
