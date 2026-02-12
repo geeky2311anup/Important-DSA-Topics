@@ -142,32 +142,70 @@ Copy code
 ```java
 class Solution {
 
+    // Helper function to check if the 3x3 subgrid starting at (row, col)
+    // forms a valid magic square
     private boolean checkMagic(int[][] mat, int row, int col) {
 
-        int target = mat[row][col] + mat[row][col + 1] + mat[row][col + 2];
-        boolean[] used = new boolean[10]; // index 1..9
+        // In a magic square, all rows, columns, and diagonals
+        // must have the same sum.
+        // We take the first row as the target sum.
+        int target = mat[row][col] 
+                   + mat[row][col + 1] 
+                   + mat[row][col + 2];
 
-        // validate numbers 1 to 9 and uniqueness
+        // Boolean array to ensure numbers 1–9 appear exactly once
+        // Index 0 is unused
+        boolean[] used = new boolean[10];
+
+        // Step 1: Check if all numbers are between 1 and 9
+        // and ensure there are no duplicates
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 int val = mat[row + i][col + j];
-                if (val < 1 || val > 9 || used[val]) return false;
+
+                // If number is out of range or already used, not magic
+                if (val < 1 || val > 9 || used[val]) 
+                    return false;
+
                 used[val] = true;
             }
         }
 
-        // check row sums and column sums
+        // Step 2: Check all row sums and column sums
         for (int k = 0; k < 3; k++) {
-            int rowSum = mat[row + k][col] + mat[row + k][col + 1] + mat[row + k][col + 2];
-            int colSum = mat[row][col + k] + mat[row + 1][col + k] + mat[row + 2][col + k];
-            if (rowSum != target || colSum != target) return false;
+
+            // Sum of kth row
+            int rowSum = mat[row + k][col] 
+                       + mat[row + k][col + 1] 
+                       + mat[row + k][col + 2];
+
+            // Sum of kth column
+            int colSum = mat[row][col + k] 
+                       + mat[row + 1][col + k] 
+                       + mat[row + 2][col + k];
+
+            // If any row or column sum differs from target, not magic
+            if (rowSum != target || colSum != target) 
+                return false;
         }
 
-        // check diagonals
-        int diag1 = mat[row][col] + mat[row + 1][col + 1] + mat[row + 2][col + 2];
-        int diag2 = mat[row][col + 2] + mat[row + 1][col + 1] + mat[row + 2][col];
-        if (diag1 != target || diag2 != target) return false;
+        // Step 3: Check both diagonals
 
+        // Main diagonal: top-left to bottom-right
+        int diag1 = mat[row][col] 
+                  + mat[row + 1][col + 1] 
+                  + mat[row + 2][col + 2];
+
+        // Anti-diagonal: top-right to bottom-left
+        int diag2 = mat[row][col + 2] 
+                  + mat[row + 1][col + 1] 
+                  + mat[row + 2][col];
+
+        // If diagonal sums differ, not magic
+        if (diag1 != target || diag2 != target) 
+            return false;
+
+        // If all checks pass, it is a magic square
         return true;
     }
 
@@ -177,13 +215,20 @@ class Solution {
         int cols = grid[0].length;
         int count = 0;
 
+        // We check every possible 3x3 subgrid
+        // So we iterate until rows-3 and cols-3
         for (int r = 0; r <= rows - 3; r++) {
             for (int c = 0; c <= cols - 3; c++) {
+
+                // If this 3x3 block is a magic square, increment count
                 if (checkMagic(grid, r, c)) {
                     count++;
                 }
             }
         }
+
+        // Return total number of magic squares found
         return count;
     }
 }
+
