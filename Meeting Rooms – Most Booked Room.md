@@ -121,44 +121,62 @@ Answer → **0** (smaller index wins)
 class Solution {
     public int mostBooked(int rooms, int[][] meetings) {
 
-        // sort meetings by start time
+        // Step 1: Sort all meetings based on their start time
+        // This ensures we process meetings in chronological order
         Arrays.sort(meetings, (x, y) -> Integer.compare(x[0], y[0]));
 
+        // usage[i] → number of meetings handled by room i
         int[] usage = new int[rooms];
+
+        // nextFree[i] → the next time room i becomes available
+        // Use long to avoid overflow when times accumulate
         long[] nextFree = new long[rooms];
 
+        // Step 2: Process each meeting
         for (int[] meet : meetings) {
             int start = meet[0];
             int finish = meet[1];
 
-            int chosen = -1;
+            int chosen = -1; // room chosen for this meeting
 
-            // try to find a room free at start time
+            // Step 2a: Try to find a room that is free at the meeting's start time
             for (int r = 0; r < rooms; r++) {
                 if (nextFree[r] <= start) {
-                    chosen = r;
-                    break;
+                    chosen = r; // room is available
+                    break;      // pick the first available room (smallest index)
                 }
             }
 
-            // if no room is free, delay meeting to earliest available room
+            // Step 2b: If no room is free, delay the meeting
+            // to the earliest available room
             if (chosen == -1) {
+
                 long earliest = Long.MAX_VALUE;
+
+                // Find the room that becomes free the earliest
                 for (int r = 0; r < rooms; r++) {
                     if (nextFree[r] < earliest) {
                         earliest = nextFree[r];
                         chosen = r;
                     }
                 }
+
+                // Delay the meeting:
+                // new start = earliest free time
+                // new finish = earliest + duration
                 nextFree[chosen] = earliest + (finish - start);
-            } else {
+            } 
+            else {
+                // Room was free at start time, so schedule normally
                 nextFree[chosen] = finish;
             }
 
+            // Step 2c: Increase usage count for that room
             usage[chosen]++;
         }
 
-        // find room with maximum usage
+        // Step 3: Find the room with the highest usage
+        // If tie, return the smallest room index
         int answer = 0;
         for (int i = 1; i < rooms; i++) {
             if (usage[i] > usage[answer]) {
@@ -166,5 +184,8 @@ class Solution {
             }
         }
 
+        // Step 4: Return the room index with most meetings
         return answer;
-    
+    }
+}
+
