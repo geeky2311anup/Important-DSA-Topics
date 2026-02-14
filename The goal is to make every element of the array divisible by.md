@@ -67,15 +67,23 @@
 ```java
 class Solution {
     public int minimumOperations(int[] nums) {
+        // Counter to store the number of operations needed
         int operations = 0;
 
+        // Traverse through each number in the array
         for (int x : nums) {
+            // Find the remainder when divided by 3
             int remainder = x % 3;
+
+            // If remainder is not zero, the number is not divisible by 3
+            // So we need one operation to make it divisible by 3
             if (remainder != 0) {
                 operations++;
             }
         }
 
+        // Return the total number of operations required
         return operations;
     }
 }
+
