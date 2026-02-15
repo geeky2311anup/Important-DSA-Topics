@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <iostream>
+#include <vector>
+
 
 void sortArrayByParity(vector<int>& nums) {
     // Write your code here

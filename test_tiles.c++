@@ -1,3 +1,7 @@
+#include <unordered_map>
+
+using namespace std;
+
 class Solution {
     public:
         void backtrack(unordered_map<char, int>& freq, int& count) {

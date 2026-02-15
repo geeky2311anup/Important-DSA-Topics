@@ -1,3 +1,9 @@
+#include <algorithm>
+#include <cmath>
+#include <unordered_map>
+
+using namespace std;
+
 class Solution {
 public:
     bool isVowel(char c) {

@@ -15,6 +15,3 @@ int main() {
     }
     return 0;
 }
-```
-
-No functional changes have been made. The code retains its original logic and behavi

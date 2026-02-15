@@ -1,5 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <vector>
+
 
 int main() {
     // Optimizes standard I/O operations for competitive programming

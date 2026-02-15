@@ -1,5 +1,7 @@
 #include <iostream>
 using namespace std;
+#include <string>
+
 
 void solve() {
     int N, start38 = 0, ltime108 = 0;

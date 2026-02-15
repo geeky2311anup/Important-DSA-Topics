@@ -3,6 +3,8 @@
 #include <algorithm>
 
 using namespace std;
+#include <cmath>
+
 
 const int MOD = 1e9 + 7;
 const int MAX_N = 1e4 + 10;

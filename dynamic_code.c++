@@ -1,3 +1,12 @@
+#include <algorithm>
+#include <cmath>
+#include <utility>
+#include <vector>
+#include <climits>
+#include <cstring>
+
+using namespace std;
+
 class Solution {
     private:
         int F[30][30][30], G[30][30][30];

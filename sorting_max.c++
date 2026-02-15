@@ -1,3 +1,8 @@
+#include <bit>
+#include <cmath>
+
+using namespace std;
+
 class Solution {
     public:
         char kthCharacter(int k) {
@@ -5,7 +10,7 @@ class Solution {
             int t;
             while (k != 1) {
                 
-                t = __lg(k);
+                t = static_cast<int>(log2(k));
                 if ((1 << t) == k) {
                     t--;
                 }

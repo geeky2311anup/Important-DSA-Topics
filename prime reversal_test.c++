@@ -1,5 +1,7 @@
 #include <iostream>
 using namespace std;
+#include <string>
+
 
 void solve() {
     int n;

@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <utility>
+#include <vector>
+
 
 class Solution {
 public:

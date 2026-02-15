@@ -5,6 +5,10 @@
 # define ll long long int
  
 using namespace std;
+#include <iostream>
+#include <string>
+#include <utility>
+
  
 const int maxt = 1e5;
 const string newln = "\n", space = " ";

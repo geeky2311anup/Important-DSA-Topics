@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <iostream>
+#include <vector>
+
 
 #define ll long long
 #define vll vector<ll>

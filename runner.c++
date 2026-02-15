@@ -1,6 +1,9 @@
 #include <cstdio>
 #include <cassert>
 #include <cstring>
+#include <string>
+
+using namespace std;
 
 char buffer[100001];
 

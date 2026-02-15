@@ -1,5 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+
 #define fastio ios_base::sync_with_stdio(0);cin.tie(0)
  
 int main(){

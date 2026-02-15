@@ -1,5 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
+#include <iostream>
+#include <string>
+#include <utility>
+#include <vector>
+
 
 class Spreadsheet {
 private:

@@ -4,6 +4,8 @@
 #include <algorithm>
 
 using namespace std;
+#include <cmath>
+
 
 void findMaximumPairs() {
     string students;
