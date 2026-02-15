@@ -127,24 +127,42 @@ class Solution {
     public int maxUncrossedLines(int[] a, int[] b) {
         int n = a.length, m = b.length;
 
-        // Always keep second array smaller for space optimization
+        // Ensure that array b is the smaller one to reduce space usage
+        // This keeps the DP array as small as possible
         if (n < m) return maxUncrossedLines(b, a);
 
+        // dp[j] represents the result for a[0..i-1] and b[0..j-1]
+        // We only store one row to optimize space
         int[] dp = new int[m + 1];
 
+        // Iterate through elements of array a
         for (int i = 1; i <= n; i++) {
-            int diag = 0;  // stores dp[j-1] from previous iteration
+            // diag stores the value of dp[j-1] from the previous row
+            // It represents the diagonal cell in the 2D DP table
+            int diag = 0;
+
+            // Iterate through elements of array b
             for (int j = 1; j <= m; j++) {
+                // Store current dp[j] before updating
                 int temp = dp[j];
+
+                // If elements match, extend the line (like LCS)
                 if (a[i - 1] == b[j - 1]) {
                     dp[j] = diag + 1;
                 } else {
+                    // Otherwise, take the maximum of:
+                    // - previous value in same column (dp[j])
+                    // - value to the left (dp[j - 1])
                     dp[j] = Math.max(dp[j], dp[j - 1]);
                 }
+
+                // Update diag for next iteration
                 diag = temp;
             }
         }
 
+        // Final result stored in dp[m]
         return dp[m];
     }
 }
+
