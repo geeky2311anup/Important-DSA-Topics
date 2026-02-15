@@ -44,3 +44,14 @@ private:
         return results;
     }
 };
+
+int main() {
+    // Example usage
+    Solution sol;
+    vector<int> cards = {4, 1, 8, 7};
+    
+    bool result = sol.judgePoint24(cards);
+    cout << "Can form 24 with cards [4, 1, 8, 7]: " << (result ? "Yes" : "No") << endl;
+    
+    return 0;
+}
