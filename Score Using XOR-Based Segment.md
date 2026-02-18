@@ -67,7 +67,7 @@ This allows us to:
 
 (Indented to stay safely inside the markdown block)
 
-    #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 using ll = long long;
@@ -149,7 +149,6 @@ int main() {
     }
     return 0;
 }
-
 
 ---
 
