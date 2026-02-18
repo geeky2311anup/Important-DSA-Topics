@@ -68,62 +68,88 @@ This allows us to:
 (Indented to stay safely inside the markdown block)
 
     #include <bits/stdc++.h>
-    using namespace std;
+using namespace std;
 
-    using ll = long long;
+using ll = long long;
 
-    void processCase() {
-        int n;
-        cin >> n;
+void processCase() {
+    int n;
+    cin >> n;
 
-        vector<ll> a(n);
-        for (int i = 0; i < n; i++) {
-            cin >> a[i];
-        }
-
-        unordered_map<ll, int> lastPos;
-        lastPos.reserve(n * 2);
-
-        vector<int> nextIndex(n, -1);
-
-        ll suffixXor = 0;
-        lastPos[0] = n;
-
-        for (int i = n - 1; i >= 0; i--) {
-            suffixXor ^= a[i];
-
-            if (lastPos.count(suffixXor)) {
-                nextIndex[i] = lastPos[suffixXor] - 1;
-            }
-
-            lastPos[suffixXor] = i;
-        }
-
-        vector<ll> best(n, 0);
-        ll answer = 0;
-
-        for (int i = n - 1; i >= 0; i--) {
-            best[i] = a[i];
-            if (nextIndex[i] != -1) {
-                best[i] += best[nextIndex[i]];
-            }
-            answer = max(answer, best[i]);
-        }
-
-        cout << answer << "\n";
+    // Read the array
+    vector<ll> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
     }
 
-    int main() {
-        ios::sync_with_stdio(false);
-        cin.tie(nullptr);
+    // Map to store last occurrence of each suffix XOR value
+    // key = suffix XOR value
+    // value = index where this suffix XOR was last seen
+    unordered_map<ll, int> lastPos;
+    lastPos.reserve(n * 2);
 
-        int t;
-        cin >> t;
-        while (t--) {
-            processCase();
+    // nextIndex[i] will store the next position
+    // where the same suffix XOR occurs
+    vector<int> nextIndex(n, -1);
+
+    ll suffixXor = 0;
+
+    // Base case:
+    // suffix XOR = 0 at imaginary index n
+    lastPos[0] = n;
+
+    // Traverse from right to left
+    for (int i = n - 1; i >= 0; i--) {
+        // Update suffix XOR
+        suffixXor ^= a[i];
+
+        // If this suffix XOR was seen before
+        // store the next index
+        if (lastPos.count(suffixXor)) {
+            nextIndex[i] = lastPos[suffixXor] - 1;
         }
-        return 0;
+
+        // Update last occurrence of this suffix XOR
+        lastPos[suffixXor] = i;
     }
+
+    // best[i] stores the best value starting from index i
+    vector<ll> best(n, 0);
+    ll answer = 0;
+
+    // Compute best values from right to left
+    for (int i = n - 1; i >= 0; i--) {
+        // Start with the value at current index
+        best[i] = a[i];
+
+        // If there is a valid next segment
+        // add its best value
+        if (nextIndex[i] != -1) {
+            best[i] += best[nextIndex[i]];
+        }
+
+        // Update global answer
+        answer = max(answer, best[i]);
+    }
+
+    // Output final result
+    cout << answer << "\n";
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+
+    // Process each test case
+    while (t--) {
+        processCase();
+    }
+    return 0;
+}
+
 
 ---
 
