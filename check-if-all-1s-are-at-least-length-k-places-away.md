@@ -58,21 +58,37 @@ Copy code
 class Solution {
     public boolean kLengthApart(int[] nums, int k) {
         int n = nums.length;
-        int count = k; // distance tracker initialized as k
 
+        // This variable keeps track of the number of zeros
+        // between two consecutive 1s.
+        // It starts at k so that the first 1 is always valid.
+        int count = k;
+
+        // Traverse through the array
         for (int i = 0; i < n; i++) {
+
+            // If we encounter a 1
             if (nums[i] == 1) {
-                // If previous distance < k, violation found
+
+                // If the number of zeros between the current 1
+                // and the previous 1 is less than k,
+                // the condition is violated.
                 if (count < k) {
                     return false;
                 }
-                // Reset counter after finding a new 1
+
+                // Reset the counter after encountering a 1
+                // because we start counting zeros again.
                 count = 0;
             } else {
-                // Increase distance count for zeros
+                // If the current element is 0,
+                // increase the distance counter.
                 count++;
             }
         }
+
+        // If no violations were found, return true
         return true;
     }
 }
+
