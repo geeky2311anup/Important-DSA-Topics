@@ -4,3 +4,32 @@ isalpha(ch)// used to check a-b ,A-B
 isdigit(ch)// used to check 0-9
 ispunct(ch)// used to check @#$_&-+()/:;!?
 isalnum(ch)//1-9,a-z,A-Z
+🔤 Additional Character Checking Functions
+
+isspace(ch)
+✔ Checks for whitespace characters
+(space ' ', tab \t, newline \n, vertical tab \v, form feed \f, carriage return \r)
+
+isblank(ch)
+✔ Checks for space or tab only
+
+isprint(ch)
+✔ Checks for printable characters (including space)
+
+isgraph(ch)
+✔ Checks for printable characters except space
+
+iscntrl(ch)
+✔ Checks for control characters (non-printable like \n, \t, etc.)
+
+isxdigit(ch)
+✔ Checks for hexadecimal digits
+(0-9, a-f, A-F)
+
+🔄 Character Conversion Functions
+
+tolower(ch)
+✔ Converts uppercase letter to lowercase
+
+toupper(ch)
+✔ Converts lowercase letter to uppercase
