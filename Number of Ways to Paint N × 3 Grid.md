@@ -137,19 +137,38 @@ Only constant variables are used.
 ```java
 class Solution {
     public int numOfWays(int n) {
+        // Modulo constant to prevent integer overflow
         final int MOD = 1_000_000_007;
 
-        long same = 6;   // patterns with same colors
-        long diff = 6;   // patterns with different colors
+        // same  → number of ways where the row has pattern like ABA
+        // diff  → number of ways where the row has pattern like ABC
+        // For the first row, there are:
+        // 6 ways to form ABA pattern
+        // 6 ways to form ABC pattern
+        long same = 6;
+        long diff = 6;
 
+        // Start building from row 2 to row n
         for (int row = 2; row <= n; row++) {
+
+            // If previous row was ABA (same pattern),
+            // current row can be formed in:
+            //   3 ways to remain ABA
+            //   2 ways to become ABC
+            // If previous row was ABC (diff pattern),
+            // current row can be formed in:
+            //   2 ways to become ABA
+            //   2 ways to remain ABC
+
             long nextSame = (3 * same + 2 * diff) % MOD;
             long nextDiff = (2 * same + 2 * diff) % MOD;
 
+            // Update for next iteration
             same = nextSame;
             diff = nextDiff;
         }
 
-        return (int)((same + diff) % MOD);
+        // Total ways = sum of both pattern types
+        return (int) ((same + diff) % MOD);
     }
 }
