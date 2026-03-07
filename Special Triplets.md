@@ -79,28 +79,51 @@ Below is a corrected, clear Java implementation using HashMaps (works for genera
 ```java
 class Solution {
     public int specialTriplets(int[] nums) {
+        // Use a large prime for modulo arithmetic to prevent integer overflow
         final long MOD = 1_000_000_007L;
-        Map<Integer, Integer> memo = new HashMap<>();        // counts of seen values
-        Map<Integer, Long> duplets = new HashMap<>();       // counts of pair-sums seen
+
+        /* * memo: Stores single numbers seen so far.
+         * Key: the number value, Value: frequency of that number.
+         * Represents potential nums[i].
+         */
+        Map<Integer, Integer> memo = new HashMap<>(); 
+
+        /* * duplets: Stores counts of pair-sums (nums[i] + nums[j]) formed so far.
+         * Key: the sum (nums[i] + nums[j]), Value: total occurrences of that sum.
+         * Represents potential sums for nums[k].
+         */
+        Map<Integer, Long> duplets = new HashMap<>();
 
         long res = 0L;
+
         for (int number : nums) {
-            // add all pairs that sum exactly to current number
+            /* * STEP 1: Check if the current 'number' can be 'nums[k]'.
+             * If 'number' exists in 'duplets', it means there are existing pairs (i, j) 
+             * where i < j < current_index and nums[i] + nums[j] == number.
+             */
             res = (res + duplets.getOrDefault(number, 0L)) % MOD;
 
-            // update pair-sums formed by current number and all previously seen values
-            // for each prev value v, add memo[v] to duplets[v + number]
+            /* * STEP 2: Treat 'number' as 'nums[j]' and form new pairs with 'nums[i]'.
+             * Iterate through all unique values 'v' seen previously (the 'memo').
+             * For every occurrence of 'v', we form a new pair-sum (v + number).
+             */
             for (Map.Entry<Integer, Integer> e : memo.entrySet()) {
-                int v = e.getKey();
-                int cnt = e.getValue();
-                long sum = (long) v + number;
-                duplets.put(sum, (duplets.getOrDefault(sum, 0L) + cnt) % MOD);
+                int v = e.getKey();          // A value representing nums[i]
+                int cnt = e.getValue();       // How many times nums[i] appeared
+                
+                long sum = (long) v + number; // The resulting pair-sum
+                
+                // Add these new pairs to our duplets map for future 'k' indices to find
+                duplets.put((int)sum, (duplets.getOrDefault((int)sum, 0L) + cnt) % MOD);
             }
 
-            // mark current value seen
+            /* * STEP 3: Treat 'number' as a potential 'nums[i]'.
+             * Record that we've seen this value to be used by future 'j' indices.
+             */
             memo.put(number, memo.getOrDefault(number, 0) + 1);
         }
 
+        // Return result cast back to int as per method signature
         return (int) (res % MOD);
     }
 }
