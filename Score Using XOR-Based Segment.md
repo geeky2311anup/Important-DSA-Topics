@@ -66,64 +66,144 @@ This allows us to:
 ## C++ Implementation
 
 (Indented to stay safely inside the markdown block)
+#include <bits/stdc++.h>
+using namespace std;
 
-    #include <bits/stdc++.h>
-    using namespace std;
+using ll = long long;
 
-    using ll = long long;
+/*
+    This function processes one test case.
+*/
+void processCase() {
 
-    void processCase() {
-        int n;
-        cin >> n;
+    // Read size of array
+    int n;
+    cin >> n;
 
-        vector<ll> a(n);
-        for (int i = 0; i < n; i++) {
-            cin >> a[i];
-        }
+    // Input array
+    vector<ll> a(n);
 
-        unordered_map<ll, int> lastPos;
-        lastPos.reserve(n * 2);
-
-        vector<int> nextIndex(n, -1);
-
-        ll suffixXor = 0;
-        lastPos[0] = n;
-
-        for (int i = n - 1; i >= 0; i--) {
-            suffixXor ^= a[i];
-
-            if (lastPos.count(suffixXor)) {
-                nextIndex[i] = lastPos[suffixXor] - 1;
-            }
-
-            lastPos[suffixXor] = i;
-        }
-
-        vector<ll> best(n, 0);
-        ll answer = 0;
-
-        for (int i = n - 1; i >= 0; i--) {
-            best[i] = a[i];
-            if (nextIndex[i] != -1) {
-                best[i] += best[nextIndex[i]];
-            }
-            answer = max(answer, best[i]);
-        }
-
-        cout << answer << "\n";
+    // Read all elements
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
     }
 
-    int main() {
-        ios::sync_with_stdio(false);
-        cin.tie(nullptr);
+    /*
+        lastPos map:
+        Stores the LAST index where a particular suffix XOR was seen.
 
-        int t;
-        cin >> t;
-        while (t--) {
-            processCase();
+        Key   -> suffix XOR value
+        Value -> index where that suffix XOR appears
+    */
+    unordered_map<ll, int> lastPos;
+
+    // Reserve space to avoid frequent rehashing (performance optimization)
+    lastPos.reserve(n * 2);
+
+    /*
+        nextIndex[i] stores the next position where the same suffix XOR
+        appears again.
+
+        If such position exists:
+            nextIndex[i] = that position - 1
+
+        Otherwise:
+            nextIndex[i] = -1
+    */
+    vector<int> nextIndex(n, -1);
+
+    /*
+        suffixXor stores XOR of suffix elements
+        while traversing array from right to left.
+    */
+    ll suffixXor = 0;
+
+    /*
+        Base condition:
+        XOR of empty suffix is 0 at position n.
+    */
+    lastPos[0] = n;
+
+    /*
+        Traverse array from right to left
+        to compute suffix XOR values.
+    */
+    for (int i = n - 1; i >= 0; i--) {
+
+        // Update suffix XOR
+        suffixXor ^= a[i];
+
+        /*
+            If we have seen this suffix XOR before,
+            it means the subarray between these positions
+            has XOR = 0.
+        */
+        if (lastPos.count(suffixXor)) {
+
+            /*
+                Store the position just before that index
+                so we can connect segments later.
+            */
+            nextIndex[i] = lastPos[suffixXor] - 1;
         }
-        return 0;
+
+        // Update the last seen position of this suffix XOR
+        lastPos[suffixXor] = i;
     }
+
+    /*
+        best[i] stores the best possible value
+        starting from index i.
+    */
+    vector<ll> best(n, 0);
+
+    // Final answer for this test case
+    ll answer = 0;
+
+    /*
+        Compute DP values from right to left.
+    */
+    for (int i = n - 1; i >= 0; i--) {
+
+        // Base contribution from element itself
+        best[i] = a[i];
+
+        /*
+            If we found a next valid segment
+            where XOR becomes zero,
+            we can combine the results.
+        */
+        if (nextIndex[i] != -1) {
+
+            // Add best result from that next segment
+            best[i] += best[nextIndex[i]];
+        }
+
+        // Update global maximum answer
+        answer = max(answer, best[i]);
+    }
+
+    // Print result for this test case
+    cout << answer << "\n";
+}
+
+int main() {
+
+    // Fast I/O for competitive programming
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    // Number of test cases
+    int t;
+    cin >> t;
+
+    // Process each test case
+    while (t--) {
+        processCase();
+    }
+
+    return 0;
+}
 
 ---
 
