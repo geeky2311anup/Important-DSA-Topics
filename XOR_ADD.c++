@@ -7,9 +7,8 @@ class Solution {
 public:
     // Function to return numbers from 1 to n in lexicographical order
     vector<int> lexicalOrder(int n) {
-        vector<int> lexicographicalNumbers; // Only ONE declaration
+        vector<int> lexicographicalNumbers; // Single declaration
 
-        // Start generating numbers from 1 to 9
         for (int start = 1; start <= 9; ++start) {
             generateLexicalNumbers(start, n, lexicographicalNumbers);
         }
