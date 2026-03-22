@@ -40,30 +40,42 @@ This is efficient and clean.
 using namespace std;
 
 int main() {
+    // Fast input/output (useful for large inputs)
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int tc;
+    int tc; // Number of test cases
     cin >> tc;
+
+    // Loop through each test case
     while (tc--) {
         int n;
-        cin >> n;
+        cin >> n; // Number of elements in this test case
 
+        // Unordered set to store only distinct values
         unordered_set<int> distinctVals;
+
+        // Reserve space to improve performance (avoids rehashing)
         distinctVals.reserve(n);
 
+        // Read all numbers
         for (int i = 0; i < n; ++i) {
             int x;
             cin >> x;
+
+            // Insert into set (duplicates automatically ignored)
             distinctVals.insert(x);
         }
 
+        // Check how many distinct values are present
         if (distinctVals.size() > 1) {
+            // If at least 2 different values exist
             cout << 2 << '\n';
         } else {
+            // If all values are same
             cout << -1 << '\n';
         }
     }
 
-    return 0;
+    return 0; // End of program
 }
