@@ -113,35 +113,35 @@ Total = **6**
 ## 💻 Code
 
 ```java
+```java
 class Solution {
     public int countNegatives(int[][] matrix) {
 
-        // This will store the total count of negative numbers
+        // Stores total number of negative values
         int total = 0;
 
-        // Number of rows in the matrix
+        // Total number of rows
         int rows = matrix.length;
 
-        // Number of columns in the matrix (assuming matrix is non-empty)
+        // Total number of columns (matrix assumed non-empty)
         int cols = matrix[0].length;
 
-        // Traverse each row
+        // Iterate through each row
         for (int r = 0; r < rows; r++) {
 
-            // Traverse each column in the current row
+            // Iterate through each column in current row
             for (int c = 0; c < cols; c++) {
 
-                // Check if the current element is negative
+                // If current element is negative, increment counter
                 if (matrix[r][c] < 0) {
-
-                    // Increment the count if a negative number is found
                     total++;
                 }
             }
         }
 
-        // Return the total count of negative numbers in the matrix
+        // Return final count of negative numbers
         return total;
     }
 }
+```
 
