@@ -93,10 +93,15 @@ Total = **6** ✔️
 ```java
 class Solution {
     public int countPermutations(int[] complexity) {
+        // Modulo for large factorial values
         final long MOD = 1_000_000_007L;
+
+        // Length of the input array
         int n = complexity.length;
 
-        // Check if the first element is strictly the smallest
+        // Check if the first element is strictly smaller
+        // than every other element in the array.
+        // If not, no valid permutation exists.
         int smallest = complexity[0];
         for (int i = 1; i < n; i++) {
             if (complexity[i] <= smallest) {
@@ -104,12 +109,16 @@ class Solution {
             }
         }
 
-        // compute (n-1)! mod MOD
+        // Since the first element must stay fixed as the smallest,
+        // we only need to count permutations of the remaining (n - 1) elements.
+        // This is simply (n - 1)! modulo MOD.
         long ans = 1;
         for (int k = 2; k <= n - 1; k++) {
             ans = (ans * k) % MOD;
         }
 
+        // Return the result as an integer
         return (int) ans;
     }
 }
+
