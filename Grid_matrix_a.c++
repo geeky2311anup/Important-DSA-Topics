@@ -3,41 +3,50 @@ using namespace std;
 
 int main() {
 
-    // Fast input/output for competitive programming
+    // Enable fast input/output (important for competitive programming)
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
     int T;
     cin >> T;  // Number of test cases
 
-    // Loop through each test case
+    // Process each test case
     while (T--) {
 
         int N;
         cin >> N;  // Size of the square matrix (N x N)
 
-        // Iterate through each row
+        // Loop through each row
         for (int row = 0; row < N; ++row) {
 
-            // Iterate through each column
+            // Loop through each column
             for (int col = 0; col < N; ++col) {
 
-                // Compute value using cyclic pattern
-                // (row + col + 1) % N ensures values wrap around from 0 to N-1
+                /*
+                 * Generate value using a cyclic pattern:
+                 * (row + col + 1) % N produces values from 0 to N-1
+                 * It "wraps around" when exceeding N-1
+                 *
+                 * Example (N = 4):
+                 * Row 0 → 1 2 3 0
+                 * Row 1 → 2 3 0 1
+                 * Row 2 → 3 0 1 2
+                 * Row 3 → 0 1 2 3
+                 */
                 int val = (row + col + 1) % N;
 
-                // Print the value
+                // Print the current value
                 cout << val;
 
-                // Print space between elements except after the last column
+                // Add space between elements (except after last column)
                 if (col + 1 < N) 
                     cout << " ";
             }
 
-            // Move to the next line after finishing a row
+            // Move to the next line after each row
             cout << "\n";
         }
     }
 
-    return 0;  // End of program
+    return 0;  // Program ends successfully
 }
