@@ -76,28 +76,43 @@ For each test case:
 ## Reference Implementation (C++)
 
 ```cpp
-#include <bits/stdc++.h>
-using namespace std;
+class Solution {
+    public boolean checkStrings(String first, String second) {
+        
+        // Arrays to store frequency differences of characters
+        // at even and odd indices
+        int[] evenCount = new int[26];
+        int[] oddCount = new int[26];
 
-int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(nullptr);
+        int n = first.length();
 
-  int t;
-  cin >> t;
+        // Traverse both strings simultaneously
+        for (int i = 0; i < n; i++) {
+            char c1 = first.charAt(i);
+            char c2 = second.charAt(i);
 
-  while (t--) {
-      long long a, b, c, d;
-      cin >> a >> b >> c >> d;
+            // If index is even
+            if ((i & 1) == 0) {
+                // Increase count for first string character
+                // Decrease count for second string character
+                evenCount[c1 - 'a']++;
+                evenCount[c2 - 'a']--;
+            } else {
+                // If index is odd, do the same for oddCount array
+                oddCount[c1 - 'a']++;
+                oddCount[c2 - 'a']--;
+            }
+        }
 
-      if (b > d || c > (a + d - b)) {
-          cout << -1 << '\n';
-      } else {
-          long long extra = d - b;
-          long long result = a + extra + (extra - c);
-          cout << result << '\n';
-      }
-  }
+        // Check if all counts are zero
+        // If not, strings cannot be made equal
+        for (int i = 0; i < 26; i++) {
+            if (evenCount[i] != 0 || oddCount[i] != 0) {
+                return false;
+            }
+        }
 
-  return 0;
+        // If all counts match, strings are equivalent
+        return true;
+    }
 }
