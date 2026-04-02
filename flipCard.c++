@@ -5,12 +5,21 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int t;
-    cin >> t;  // number of test cases
-    while (t--) {
-        int n, k;
-        cin >> n >> k;
-        cout << min(k, n - k) << "\n";
+    int testCases;
+    cin >> testCases;
+
+    while (testCases > 0) {
+
+        int total, choose;
+        cin >> total >> choose;
+
+        // We want the minimum between k and (n - k)
+        int answer = (choose < total - choose) ? choose : (total - choose);
+
+        cout << answer << '\n';
+
+        testCases--;
     }
+
     return 0;
 }
