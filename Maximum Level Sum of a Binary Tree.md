@@ -141,6 +141,7 @@ Level sums:
  * }
  */
 
+// Helper class to store node along with its level in the tree
 class Pair {
     TreeNode node;
     int level;
@@ -154,36 +155,53 @@ class Pair {
 class Solution {
     public int maxLevelSum(TreeNode root) {
 
+        // Map to store sum of values at each level
+        // key = level number, value = sum of that level
         Map<Integer, Integer> levelSum = new HashMap<>();
+
+        // Queue for BFS traversal (level order traversal)
         Queue<Pair> queue = new LinkedList<>();
 
+        // Start BFS from root at level 1
         queue.add(new Pair(root, 1));
 
+        // Standard BFS loop
         while (!queue.isEmpty()) {
             Pair cur = queue.poll();
+
             TreeNode node = cur.node;
             int lvl = cur.level;
 
+            // Add current node's value to its level sum
             levelSum.put(lvl, levelSum.getOrDefault(lvl, 0) + node.val);
 
+            // Push left child with incremented level
             if (node.left != null) {
                 queue.add(new Pair(node.left, lvl + 1));
             }
+
+            // Push right child with incremented level
             if (node.right != null) {
                 queue.add(new Pair(node.right, lvl + 1));
             }
         }
 
+        // Find the level with maximum sum
         int maxSum = Integer.MIN_VALUE;
         int answerLevel = 1;
 
+        // Iterate through all levels stored in map
         for (int lvl : levelSum.keySet()) {
-            if (levelSum.get(lvl) > maxSum) {
-                maxSum = levelSum.get(lvl);
+            int currentSum = levelSum.get(lvl);
+
+            // Update maximum sum and corresponding level
+            if (currentSum > maxSum) {
+                maxSum = currentSum;
                 answerLevel = lvl;
             }
         }
 
+        // Return the level having maximum sum
         return answerLevel;
     }
 }
