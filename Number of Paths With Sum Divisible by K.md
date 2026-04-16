@@ -121,53 +121,72 @@ Answer = **0**
 ## 💻 Code
 
     class Solution {
-        private static final int MOD = 1_000_000_007;
+    // Constant for modulo operation to avoid overflow
+    private static final int MOD = 1_000_000_007;
 
-        public int numberOfPaths(int[][] grid, int k) {
-            int rows = grid.length;
-            int cols = grid[0].length;
+    public int numberOfPaths(int[][] grid, int k) {
+        int rows = grid.length;
+        int cols = grid[0].length;
 
-            int[][][] dp = new int[rows][cols][k];
-            dp[0][0][grid[0][0] % k] = 1;
+        // dp[r][c][rem] = number of ways to reach cell (r,c)
+        // such that the sum of the path % k = rem
+        int[][][] dp = new int[rows][cols][k];
 
-            for (int c = 1; c < cols; c++) {
-                int val = grid[0][c];
-                for (int rem = 0; rem < k; rem++) {
-                    if (dp[0][c - 1][rem] > 0) {
-                        int nxt = (rem + val) % k;
-                        dp[0][c][nxt] =
-                            (dp[0][c][nxt] + dp[0][c - 1][rem]) % MOD;
-                    }
+        // Base case: starting cell
+        dp[0][0][grid[0][0] % k] = 1;
+
+        // Fill first row (can only come from left)
+        for (int c = 1; c < cols; c++) {
+            int val = grid[0][c];
+            for (int rem = 0; rem < k; rem++) {
+                // If there are ways to reach previous cell with remainder 'rem'
+                if (dp[0][c - 1][rem] > 0) {
+                    int nxt = (rem + val) % k; // new remainder after adding current cell
+
+                    // Add ways from left cell
+                    dp[0][c][nxt] =
+                        (dp[0][c][nxt] + dp[0][c - 1][rem]) % MOD;
                 }
             }
-
-            for (int r = 1; r < rows; r++) {
-                int val = grid[r][0];
-                for (int rem = 0; rem < k; rem++) {
-                    if (dp[r - 1][0][rem] > 0) {
-                        int nxt = (rem + val) % k;
-                        dp[r][0][nxt] =
-                            (dp[r][0][nxt] + dp[r - 1][0][rem]) % MOD;
-                    }
-                }
-            }
-
-            for (int r = 1; r < rows; r++) {
-                for (int c = 1; c < cols; c++) {
-                    int cell = grid[r][c];
-                    for (int rem = 0; rem < k; rem++) {
-                        int newRem = (rem + cell) % k;
-                        dp[r][c][newRem] =
-                            (dp[r][c][newRem] + dp[r - 1][c][rem]) % MOD;
-                        dp[r][c][newRem] =
-                            (dp[r][c][newRem] + dp[r][c - 1][rem]) % MOD;
-                    }
-                }
-            }
-
-            return dp[rows - 1][cols - 1][0];
         }
+
+        // Fill first column (can only come from top)
+        for (int r = 1; r < rows; r++) {
+            int val = grid[r][0];
+            for (int rem = 0; rem < k; rem++) {
+                if (dp[r - 1][0][rem] > 0) {
+                    int nxt = (rem + val) % k;
+
+                    // Add ways from top cell
+                    dp[r][0][nxt] =
+                        (dp[r][0][nxt] + dp[r - 1][0][rem]) % MOD;
+                }
+            }
+        }
+
+        // Fill the rest of the grid
+        for (int r = 1; r < rows; r++) {
+            for (int c = 1; c < cols; c++) {
+                int cell = grid[r][c];
+
+                for (int rem = 0; rem < k; rem++) {
+                    int newRem = (rem + cell) % k;
+
+                    // Add ways coming from the top cell
+                    dp[r][c][newRem] =
+                        (dp[r][c][newRem] + dp[r - 1][c][rem]) % MOD;
+
+                    // Add ways coming from the left cell
+                    dp[r][c][newRem] =
+                        (dp[r][c][newRem] + dp[r][c - 1][rem]) % MOD;
+                }
+            }
+        }
+
+        // Final answer: number of paths where sum % k == 0
+        return dp[rows - 1][cols - 1][0];
     }
+}
 
 ---
 
