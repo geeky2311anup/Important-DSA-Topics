@@ -134,32 +134,53 @@ Copy code
 import java.util.*;
 
 class Solution {
+    /**
+     * Calculates the number of pairs of horizontal segments that can form a trapezoid.
+     * A trapezoid is formed by picking two points on one horizontal line (y1) 
+     * and two points on a different horizontal line (y2).
+     */
     public int countTrapezoids(int[][] points) {
         final long MOD = 1_000_000_007L;
+        // HALF is the modular multiplicative inverse of 2 under MOD.
+        // Used to perform (x / 2) % MOD.
         final long HALF = (MOD + 1L) / 2L;
 
+        // Step 1: Count how many points exist on each horizontal line (y-level).
         Map<Integer, Integer> levelCount = new HashMap<>();
         for (int[] pt : points) {
             int y = pt[1];
             levelCount.merge(y, 1, Integer::sum);
         }
 
-        long totalPairs = 0L;
-        long totalPairsSq = 0L;
+        long totalPairs = 0L;   // Sum of (nCr(points_at_y, 2)) for all y
+        long totalPairsSq = 0L; // Sum of (nCr(points_at_y, 2)^2) for all y
 
+        // Step 2: Calculate combinations of 2 points for every y-level.
         for (int cnt : levelCount.values()) {
+            // A line needs at least 2 points to form a horizontal segment.
             if (cnt < 2) continue;
 
             long c = cnt;
+            // nCr calculation: ways to pick 2 points from 'c' points on this line.
             long pairsOnThisLine = c * (c - 1L) / 2L;
             long val = pairsOnThisLine % MOD;
 
+            // We track the sum and the sum of squares to use the identity:
+            // (Sum a_i)^2 - (Sum a_i^2) = 2 * (Sum of all pairs a_i * a_j)
             totalPairs = (totalPairs + val) % MOD;
             totalPairsSq = (totalPairsSq + val * val % MOD) % MOD;
         }
 
+        // Step 3: Calculate the final count.
+        // We want to pick two different y-levels (i, j) and multiply their pairs: val_i * val_j.
+        // The result is the sum of products for all unique pairs of levels.
+        
+        // (totalPairs)^2 includes (val_i * val_j) twice and (val_i^2) once.
         long res = (totalPairs * totalPairs) % MOD;
+        // Subtract the squares (val_i^2) to leave only the cross-products.
         res = (res - totalPairsSq + MOD) % MOD;
+        // Divide by 2 (multiply by HALF) because (val_i * val_j) and (val_j * val_i) 
+        // represent the same trapezoid.
         res = (res * HALF) % MOD;
 
         return (int) res;
