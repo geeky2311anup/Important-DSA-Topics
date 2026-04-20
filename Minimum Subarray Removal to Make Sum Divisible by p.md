@@ -94,32 +94,60 @@
 class Solution {
     public int minSubarray(int[] nums, int p) {
 
+        // Step 1: Compute total sum of the array
         long sum = 0;
         for (int v : nums) sum += v;
 
+        // Step 2: Find remainder when total sum is divided by p
+        // This is the value we need to "remove" from the array
         long required = sum % p;
+
+        // If already divisible by p, no need to remove anything
         if (required == 0) return 0;
 
-        // stores: prefixMod → first index where it appears
+        // Step 3: Use a HashMap to store:
+        // key   -> prefix sum modulo p
+        // value -> index where this modulo was first seen
         Map<Integer, Integer> seen = new HashMap<>();
+
+        // Initialize with prefix sum 0 at index -1
+        // This helps handle subarrays starting from index 0
         seen.put(0, -1);
 
-        long running = 0;
-        int best = nums.length;
+        long running = 0;          // running prefix sum modulo p
+        int best = nums.length;    // stores minimum length of subarray
 
+        // Step 4: Traverse the array
         for (int i = 0; i < nums.length; i++) {
+
+            // Update running prefix modulo
             running = (running + nums[i]) % p;
 
+            /*
+             We want to find a previous prefix such that:
+             
+             (current_prefix - previous_prefix) % p == required
+
+             Rearranging:
+             previous_prefix % p == (current_prefix - required + p) % p
+
+             This is the value we are searching for in the map
+            */
             int want = (int)((running - required + p) % p);
 
+            // If such a prefix exists, we found a valid subarray
             if (seen.containsKey(want)) {
+                // Calculate its length and update minimum
                 best = Math.min(best, i - seen.get(want));
             }
 
-            // record current prefix modulo
+            // Store current prefix modulo with index
+            // NOTE: We overwrite to keep the latest index
+            // (this helps minimize subarray length)
             seen.put((int)running, i);
         }
 
+        // If we never found a valid subarray, return -1
         return best == nums.length ? -1 : best;
     }
 }
