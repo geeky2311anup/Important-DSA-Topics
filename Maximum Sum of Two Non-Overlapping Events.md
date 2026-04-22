@@ -141,43 +141,62 @@ Answer = **7**
 ## 💻 Code
 
 ```java
+import java.util.Arrays;
+
 class Solution {
 
     public int maxTwoEvents(int[][] events) {
         int n = events.length;
 
-        // sort by end time
+        // Step 1: Sort all events based on their end times.
+        // This allows us to use binary search to find events that end 
+        // before a specific start time.
         Arrays.sort(events, (e1, e2) -> Integer.compare(e1[1], e2[1]));
 
+        // endTimes: Stores the sorted end times for binary search lookups.
         int[] endTimes = new int[n];
+        // bestTill: Prefix maximum array where bestTill[i] stores the 
+        // maximum value of any single event from index 0 to i.
         int[] bestTill = new int[n];
 
         for (int i = 0; i < n; i++) {
             endTimes[i] = events[i][1];
             bestTill[i] = events[i][2];
+            // If there's a previous event with a higher value, carry it forward.
             if (i > 0) {
                 bestTill[i] = Math.max(bestTill[i], bestTill[i - 1]);
             }
         }
 
+        // Initialize answer with the highest value of a single event.
         int answer = bestTill[n - 1];
 
+        // Step 2: Iterate through each event and treat it as the "second" event.
         for (int i = 0; i < n; i++) {
-            int start = events[i][0];
-            int val = events[i][2];
+            int startOfCurrent = events[i][0];
+            int valueOfCurrent = events[i][2];
 
-            answer = Math.max(answer, val);
+            // Consider the current event by itself.
+            answer = Math.max(answer, valueOfCurrent);
 
-            int idx = findLastNonOverlapping(endTimes, start, i);
+            // Step 3: Use binary search to find the latest event that ends 
+            // before the current event starts (non-overlapping).
+            int idx = findLastNonOverlapping(endTimes, startOfCurrent, i);
+            
             if (idx != -1) {
-                answer = Math.max(answer, val + bestTill[idx]);
+                // If a non-overlapping event exists, add its best prefix value 
+                // to the current event's value.
+                answer = Math.max(answer, valueOfCurrent + bestTill[idx]);
             }
         }
 
         return answer;
     }
 
-    // finds rightmost index < limit such that endTimes[index] < target
+    /**
+     * Standard binary search to find the rightmost index such that 
+     * endTimes[index] is strictly less than the target start time.
+     */
     private int findLastNonOverlapping(int[] endTimes, int target, int limit) {
         int lo = 0, hi = limit - 1;
         int pos = -1;
@@ -185,9 +204,12 @@ class Solution {
         while (lo <= hi) {
             int mid = lo + (hi - lo) / 2;
             if (endTimes[mid] < target) {
+                // This event ends before the target; it's a candidate.
+                // Try to find an even later one (move right).
                 pos = mid;
                 lo = mid + 1;
             } else {
+                // This event overlaps or ends too late; move left.
                 hi = mid - 1;
             }
         }
