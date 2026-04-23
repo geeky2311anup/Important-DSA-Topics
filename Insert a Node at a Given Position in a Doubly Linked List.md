@@ -129,26 +129,44 @@ All `next` and `prev` pointers remain correct.
 
 ```java
 class Solution {
+    /**
+     * Inserts a new node with data 'x' after the p-th node (0-indexed).
+     * @param head The start of the doubly linked list.
+     * @param p    The index of the node after which to insert.
+     * @param x    The value for the new node.
+     * @return     The head of the updated list.
+     */
     Node insertAtPos(Node head, int p, int x) {
         int count = 0;
         Node temp = head;
 
-        // move to the node at position p
-        while (count < p) {
+        // Traverse the list until we reach the node at position p.
+        // We assume p is always a valid index in this logic.
+        while (count < p && temp != null) {
             temp = temp.next;
             count++;
         }
 
+        // Safety check: if p is out of bounds, return the original head.
+        if (temp == null) return head;
+
+        // Store the original 'next' node of the current position.
+        // This node will now come after our newly inserted node.
         Node tempPrev = temp.next;
 
-        // create and insert new node
-        temp.next = new Node(x);
-        temp.next.prev = temp;
-        temp.next.next = tempPrev;
+        // 1. Create the new node and link its 'prev' back to temp.
+        // 2. Link temp's 'next' forward to this new node.
+        Node newNode = new Node(x);
+        temp.next = newNode;
+        newNode.prev = temp;
 
-        // fix backward link of next node if it exists
+        // 3. Link the new node's 'next' to the original succeeding node (tempPrev).
+        newNode.next = tempPrev;
+
+        // 4. If there was a node following temp, we must update its 'prev'
+        //    pointer to point to our new node instead of pointing back to temp.
         if (tempPrev != null) {
-            tempPrev.prev = temp.next;
+            tempPrev.prev = newNode;
         }
 
         return head;
