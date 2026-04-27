@@ -125,43 +125,53 @@ dp[n][m]
 
 (Indented instead of fenced to avoid breaking the markdown block)
 
-    class Solution {
-        public int minimumDeleteSum(String s1, String s2) {
-            char[] st1 = s1.toCharArray();
-            char[] st2 = s2.toCharArray();
+  class Solution {
+    public int minimumDeleteSum(String s1, String s2) {
+        char[] st1 = s1.toCharArray();
+        char[] st2 = s2.toCharArray();
 
-            int n = st1.length;
-            int m = st2.length;
+        int n = st1.length;
+        int m = st2.length;
 
-            int[][] dp = new int[n + 1][m + 1];
+        // dp[i][j] represents the minimum delete sum for s1[0...i-1] and s2[0...j-1]
+        int[][] dp = new int[n + 1][m + 1];
 
-            // Base case: s2 empty
-            for (int i = 1; i <= n; i++) {
-                dp[i][0] = dp[i - 1][0] + st1[i - 1];
-            }
+        // Base case: If s2 is empty, we must delete all characters from s1.
+        // The cost is the cumulative ASCII sum of s1's prefix.
+        for (int i = 1; i <= n; i++) {
+            dp[i][0] = dp[i - 1][0] + st1[i - 1];
+        }
 
-            // Base case: s1 empty
+        // Base case: If s1 is empty, we must delete all characters from s2.
+        // The cost is the cumulative ASCII sum of s2's prefix.
+        for (int j = 1; j <= m; j++) {
+            dp[0][j] = dp[0][j - 1] + st2[j - 1];
+        }
+
+        // Iteratively fill the DP table
+        for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= m; j++) {
-                dp[0][j] = dp[0][j - 1] + st2[j - 1];
-            }
-
-            // Fill DP table
-            for (int i = 1; i <= n; i++) {
-                for (int j = 1; j <= m; j++) {
-                    if (st1[i - 1] == st2[j - 1]) {
-                        dp[i][j] = dp[i - 1][j - 1];
-                    } else {
-                        dp[i][j] = Math.min(
-                            st1[i - 1] + dp[i - 1][j],
-                            st2[j - 1] + dp[i][j - 1]
-                        );
-                    }
+                // If characters match, no deletion is needed for this pair.
+                // We inherit the result from the previous prefixes (diagonal move).
+                if (st1[i - 1] == st2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    // If they don't match, we have two choices:
+                    // 1. Delete s1[i-1] and take the cost from dp[i-1][j]
+                    // 2. Delete s2[j-1] and take the cost from dp[i][j-1]
+                    // We pick the minimum of these two costs.
+                    dp[i][j] = Math.min(
+                        st1[i - 1] + dp[i - 1][j],
+                        st2[j - 1] + dp[i][j - 1]
+                    );
                 }
             }
-
-            return dp[n][m];
         }
+
+        // The final answer is the minimum cost to equalize both full strings.
+        return dp[n][m];
     }
+}
 
 ---
 
