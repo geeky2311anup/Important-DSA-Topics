@@ -125,43 +125,71 @@ dp[n][m]
 
 (Indented instead of fenced to avoid breaking the markdown block)
 
-    class Solution {
-        public int minimumDeleteSum(String s1, String s2) {
-            char[] st1 = s1.toCharArray();
-            char[] st2 = s2.toCharArray();
+   import java.util.*;
 
-            int n = st1.length;
-            int m = st2.length;
+class Solution {
+    // PIPE_MAP defines the relative movements [row_offset, col_offset] allowed for each pipe type.
+    // Index matches the pipe type (1-6).
+    private final int[][][] PIPE_MAP = {
+        {}, // Placeholder for type 0
+        {{0, -1}, {0, 1}},  // Type 1: Horizontal (Left, Right)
+        {{-1, 0}, {1, 0}},  // Type 2: Vertical (Up, Down)
+        {{0, -1}, {1, 0}},  // Type 3: Curve (Left, Down)
+        {{0, 1}, {1, 0}},   // Type 4: Curve (Right, Down)
+        {{0, -1}, {-1, 0}}, // Type 5: Curve (Left, Up)
+        {{0, 1}, {-1, 0}}    // Type 6: Curve (Right, Up)
+    };
 
-            int[][] dp = new int[n + 1][m + 1];
+    public boolean hasValidPath(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        Queue<int[]> queue = new LinkedList<>();
 
-            // Base case: s2 empty
-            for (int i = 1; i <= n; i++) {
-                dp[i][0] = dp[i - 1][0] + st1[i - 1];
-            }
+        // Start BFS from the top-left corner
+        queue.offer(new int[]{0, 0});
+        visited[0][0] = true;
 
-            // Base case: s1 empty
-            for (int j = 1; j <= m; j++) {
-                dp[0][j] = dp[0][j - 1] + st2[j - 1];
-            }
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            int r = cell[0], c = cell[1];
 
-            // Fill DP table
-            for (int i = 1; i <= n; i++) {
-                for (int j = 1; j <= m; j++) {
-                    if (st1[i - 1] == st2[j - 1]) {
-                        dp[i][j] = dp[i - 1][j - 1];
-                    } else {
-                        dp[i][j] = Math.min(
-                            st1[i - 1] + dp[i - 1][j],
-                            st2[j - 1] + dp[i][j - 1]
-                        );
+            // Target reached successfully
+            if (r == m - 1 && c == n - 1) return true;
+
+            int pipeType = grid[r][c];
+            // Iterate through both directions allowed by the current pipe type
+            for (int[] offset : PIPE_MAP[pipeType]) {
+                int nextR = r + offset[0];
+                int nextC = c + offset[1];
+
+                // 1. Check if the neighbor is within grid boundaries
+                // 2. Check if the neighbor has already been visited
+                if (nextR >= 0 && nextR < m && nextC >= 0 && nextC < n && !visited[nextR][nextC]) {
+                    // 3. Verify the "Handshake": The neighbor must have an opening 
+                    //    pointing back to our current cell.
+                    if (canConnect(grid[nextR][nextC], -offset[0], -offset[1])) {
+                        visited[nextR][nextC] = true;
+                        queue.offer(new int[]{nextR, nextC});
                     }
                 }
             }
-
-            return dp[n][m];
         }
+        return false; // No path found after exploring all reachable cells
     }
+
+    /**
+     * Helper method to check if a specific pipe type has an opening in a given direction.
+     * @param nextType The integer type of the neighbor pipe.
+     * @param backR The row offset required to point back to the previous cell.
+     * @param backC The column offset required to point back to the previous cell.
+     */
+    private boolean canConnect(int nextType, int backR, int backC) {
+        for (int[] backDir : PIPE_MAP[nextType]) {
+            if (backDir[0] == backR && backDir[1] == backC) return true;
+        }
+        return false;
+    }
+}
 
 ---
 
