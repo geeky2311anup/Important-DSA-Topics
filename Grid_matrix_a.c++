@@ -3,50 +3,55 @@ using namespace std;
 
 int main() {
 
-    // Enable fast input/output (important for competitive programming)
+    // Fast I/O for competitive programming
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int T;
-    cin >> T;  // Number of test cases
+    int t;
+    cin >> t;   // Number of test cases
 
     // Process each test case
-    while (T--) {
+    while (t--) {
 
-        int N;
-        cin >> N;  // Size of the square matrix (N x N)
+        int n;
+        cin >> n;   // Dimension of the square matrix (n x n)
 
-        // Loop through each row
-        for (int row = 0; row < N; ++row) {
+        // Traverse rows
+        for (int i = 0; i < n; ++i) {
 
-            // Loop through each column
-            for (int col = 0; col < N; ++col) {
+            // Traverse columns
+            for (int j = 0; j < n; ++j) {
 
                 /*
-                 * Generate value using a cyclic pattern:
-                 * (row + col + 1) % N produces values from 0 to N-1
-                 * It "wraps around" when exceeding N-1
+                 * Value generation logic:
+                 * We use (i + j + 1) % n to create a cyclic pattern.
                  *
-                 * Example (N = 4):
-                 * Row 0 → 1 2 3 0
-                 * Row 1 → 2 3 0 1
-                 * Row 2 → 3 0 1 2
-                 * Row 3 → 0 1 2 3
+                 * Key idea:
+                 * - Values always remain in range [0, n-1]
+                 * - Each row is a shifted version of the previous row
+                 * - Ensures a structured repeating pattern
+                 *
+                 * Example (n = 4):
+                 * 1 2 3 0
+                 * 2 3 0 1
+                 * 3 0 1 2
+                 * 0 1 2 3
                  */
-                int val = (row + col + 1) % N;
+                int value = (i + j + 1) % n;
 
-                // Print the current value
-                cout << val;
+                // Output current element
+                cout << value;
 
-                // Add space between elements (except after last column)
-                if (col + 1 < N) 
+                // Print space except after last column
+                if (j != n - 1) {
                     cout << " ";
+                }
             }
 
-            // Move to the next line after each row
-            cout << "\n";
+            // Move to next row
+            cout << '\n';
         }
     }
 
-    return 0;  // Program ends successfully
+    return 0;  // Successful execution
 }
