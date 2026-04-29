@@ -1,0 +1,64 @@
+import java.util.*;
+
+class Solution {
+
+    public long maximumScore(int[][] grid) {
+
+        int size = grid.length;
+
+        // Column-wise prefix sum
+        long[][] prefix = new long[size][size + 1];
+        for (int col = 0; col < size; col++) {
+            for (int row = 0; row < size; row++) {
+                prefix[col][row + 1] = prefix[col][row] + grid[row][col];
+            }
+        }
+
+        long[] prevDown = new long[size + 1];
+        long[] prevEqual = new long[size + 1];
+
+        // Process column by column
+        for (int col = 1; col < size; col++) {
+
+            long[] currDown = new long[size + 1];
+            long[] currEqual = new long[size + 1];
+
+            for (int prevBreak = 0; prevBreak <= size; prevBreak++) {
+                for (int currBreak = 0; currBreak <= size; currBreak++) {
+
+                    long prevValue = 0;
+                    if (currBreak > prevBreak) {
+                        prevValue = prefix[col - 1][currBreak] - prefix[col - 1][prevBreak];
+                    }
+
+                    long currValue = 0;
+                    if (currBreak < prevBreak) {
+                        currValue = prefix[col][prevBreak] - prefix[col][currBreak];
+                    }
+
+                    // Update states
+                    currDown[currBreak] = Math.max(
+                            currDown[currBreak],
+                            Math.max(prevValue + prevDown[prevBreak], prevEqual[prevBreak])
+                    );
+
+                    currEqual[currBreak] = Math.max(
+                            currEqual[currBreak],
+                            Math.max(currValue + prevEqual[prevBreak],
+                                     currValue + prevValue + prevDown[prevBreak])
+                    );
+                }
+            }
+
+            prevDown = currDown;
+            prevEqual = currEqual;
+        }
+
+        long result = 0;
+        for (long val : prevEqual) {
+            result = Math.max(result, val);
+        }
+
+        return result;
+    }
+}
