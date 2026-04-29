@@ -119,21 +119,34 @@ Copy code
 ## 💻 Code
 
 ```java
+import java.util.*;
+
 class Solution {
     public long maximumHappinessSum(int[] happiness, int k) {
-        int n = happiness.length;
-        int p = 0;
-        long ans = 0;
 
+        int n = happiness.length;   // total number of elements
+        int picks = 0;              // number of elements chosen so far
+        long total = 0;             // final answer (sum of happiness)
+
+        // Sort the array in ascending order
         Arrays.sort(happiness);
 
-        for (int i = n - 1; p < k; i--, p++) {
-            int temp = happiness[i] - p;
-            if (temp < 0) {
-                temp = 0;
+        // Start picking from the largest values (end of array)
+        for (int i = n - 1; picks < k; i--, picks++) {
+
+            // Each time we pick, happiness decreases by number of previous picks
+            int current = happiness[i] - picks;
+
+            // Happiness cannot be negative
+            if (current < 0) {
+                current = 0;
             }
-            ans += temp;
+
+            // Add to total happiness
+            total += current;
         }
-        return ans;
+
+        // Return the maximum achievable happiness sum
+        return total;
     }
 }
