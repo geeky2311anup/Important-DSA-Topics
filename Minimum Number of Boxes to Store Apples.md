@@ -120,29 +120,42 @@ Copy code
 ## 💻 Code
 
 ```java
+import java.util.*;
+
 class Solution {
     public int minimumBoxes(int[] apples, int[] capacity) {
 
+        // Step 1: Calculate total apples that need to be stored
         int required = 0;
         for (int a : apples) {
             required += a;
         }
 
-        // sort capacities in descending order
-        Integer[] caps = Arrays.stream(capacity).boxed().toArray(Integer[]::new);
+        // Step 2: Convert capacity array to Integer[] 
+        // (needed because Arrays.sort with custom comparator works on objects, not primitives)
+        Integer[] caps = Arrays.stream(capacity)
+                               .boxed()
+                               .toArray(Integer[]::new);
+
+        // Step 3: Sort capacities in descending order
+        // so we use largest boxes first (greedy approach)
         Arrays.sort(caps, (a, b) -> b - a);
 
-        int filled = 0;
-        int used = 0;
+        int filled = 0; // total capacity used so far
+        int used = 0;   // number of boxes used
 
+        // Step 4: Pick boxes one by one (largest first)
         for (int c : caps) {
-            filled += c;
-            used++;
+            filled += c; // add current box capacity
+            used++;      // increment box count
+
+            // If we can store all apples, stop early
             if (filled >= required) {
                 break;
             }
         }
 
+        // Step 5: Return number of boxes used
         return used;
     }
 }
