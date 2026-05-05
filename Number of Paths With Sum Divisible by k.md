@@ -89,32 +89,41 @@
 ## 💻 **Code**
 
 ```java
+
 class Solution {
+    // Standard modulo for large number results to prevent overflow
     private static final int MOD = 1_000_000_007;
 
     public int numberOfPaths(int[][] grid, int k) {
-
         int rows = grid.length;
         int cols = grid[0].length;
 
-        // dp[r][c][rMod] = number of ways to reach (r,c) with sum % k = rMod
+        /**
+         * 3D DP Array definition:
+         * dp[r][c][rem] stores the number of paths from (0,0) to (r,c) 
+         * such that the current sum of elements has a remainder 'rem' when divided by 'k'.
+         */
         int[][][] dp = new int[rows][cols][k];
 
-        // starting cell initializes its own modulo bucket
-        dp[0][0][grid[0][0] % k] = 1;
+        // Base case: Starting cell (0,0)
+        // Its remainder is simply the value of the cell mod k
+        dp[0]0[0] % k] = 1;
 
-        // fill first row (only can move right)
+        // Step 1: Initialize the first row
+        // At any cell in the first row, you can ONLY arrive from the left (col - 1)
         for (int col = 1; col < cols; col++) {
             int val = grid[0][col];
             for (int rem = 0; rem < k; rem++) {
                 if (dp[0][col - 1][rem] > 0) {
+                    // Current remainder = (previous remainder + current cell value) % k
                     int nxt = (rem + val) % k;
                     dp[0][col][nxt] = (dp[0][col][nxt] + dp[0][col - 1][rem]) % MOD;
                 }
             }
         }
 
-        // fill first column (only can move down)
+        // Step 2: Initialize the first column
+        // At any cell in the first column, you can ONLY arrive from above (row - 1)
         for (int row = 1; row < rows; row++) {
             int val = grid[row][0];
             for (int rem = 0; rem < k; rem++) {
@@ -125,31 +134,34 @@ class Solution {
             }
         }
 
-        // fill remaining cells
+        // Step 3: Fill the rest of the grid
+        // For internal cells, we can arrive from either the TOP or the LEFT
         for (int r = 1; r < rows; r++) {
             for (int c = 1; c < cols; c++) {
                 int cell = grid[r][c];
 
                 for (int rem = 0; rem < k; rem++) {
-
+                    // Pre-calculate the new remainder for this cell based on incoming 'rem'
                     int newRem = (rem + cell) % k;
 
-                    // from top
+                    // Option A: Path coming from the cell directly ABOVE
                     if (dp[r - 1][c][rem] > 0) {
-                        dp[r][c][newRem] =
-                                (dp[r][c][newRem] + dp[r - 1][c][rem]) % MOD;
+                        dp[r][c][newRem] = (dp[r][c][newRem] + dp[r - 1][c][rem]) % MOD;
                     }
 
-                    // from left
+                    // Option B: Path coming from the cell directly to the LEFT
                     if (dp[r][c - 1][rem] > 0) {
-                        dp[r][c][newRem] =
-                                (dp[r][c][newRem] + dp[r][c - 1][rem]) % MOD;
+                        dp[r][c][newRem] = (dp[r][c][newRem] + dp[r][c - 1][rem]) % MOD;
                     }
                 }
             }
         }
 
-        // we want paths where sum % k == 0
+        /**
+         * Return the result at the target cell (bottom-right).
+         * We specifically look for the bucket where the remainder is 0,
+         * indicating the total sum is divisible by k.
+         */
         return dp[rows - 1][cols - 1][0];
     }
 }
