@@ -1,32 +1,37 @@
-#include <bits/stdc++.h>
-using namespace std;
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+        // If the list is empty or has only one node,
+        // it cannot form a cycle
+        if (head == nullptr || head->next == nullptr)
+            return false;
 
-    int testCount;
-    cin >> testCount;
+        // Initialize two pointers:
+        // slow pointer moves one step at a time
+        // fast pointer moves two steps at a time
+        ListNode *slow = head;
+        ListNode *fast = head;
 
-    while (testCount--) {
-        int size, dummy;
-        cin >> size >> dummy; // second input 'd' is unused
+        // Traverse the linked list
+        // Condition ensures fast pointer doesn't go out of bounds
+        while (fast != nullptr && fast->next != nullptr) {
 
-        vector<long long> arr(size + 1);
-        for (int i = 1; i <= size; ++i) {
-            cin >> arr[i];
+            // Move slow pointer by one node
+            slow = slow->next;
+
+            // Move fast pointer by two nodes
+            fast = fast->next->next;
+
+            // If a cycle exists, fast will eventually catch up to slow
+            // because it moves faster (2x speed)
+            if (slow == fast) {
+                return true; // Cycle detected
+            }
         }
 
-        long long result = arr[1];
-        for (int i = 2; i <= size; ++i) {
-            if (i % 2 == 0)
-                result = max(result, arr[i]);
-            else
-                result = min(result, arr[i]);
-        }
-
-        cout << result << '\n';
+        // If fast reaches NULL, it means we hit the end of the list
+        // → no cycle exists
+        return false;
     }
-
-    return 0;
-}
+};
