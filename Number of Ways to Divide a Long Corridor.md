@@ -120,32 +120,58 @@ Final answer = **3**
 ```java
 class Solution {
     public int numberOfWays(String corridor) {
+
+        // Mod value to avoid integer overflow
         final int MOD = 1_000_000_007;
 
         long ways = 1;
+
+        // Counts total seats encountered
         int seats = 0;
+
+        // Stores index of the second seat
+        // of the previous valid pair
         int lastPairEnd = -1;
 
+        // Traverse the corridor
         for (int i = 0; i < corridor.length(); i++) {
+
             char ch = corridor.charAt(i);
 
+            // Process only seats
             if (ch == 'S') {
+
                 seats++;
 
-                // when starting a new pair after the first one
+                /*
+                   Whenever we start a new pair of seats
+                   after the first pair, calculate the
+                   possible partition positions.
+
+                   Example:
+                   S P P S | P P | S P S
+
+                   Number of choices = distance between
+                   current seat and previous pair end
+                */
                 if (seats > 2 && (seats & 1) == 1) {
                     ways = (ways * (i - lastPairEnd)) % MOD;
                 }
 
-                // mark the end of a seat pair
+                // If seat count becomes even,
+                // this seat completes a pair
                 if ((seats & 1) == 0) {
                     lastPairEnd = i;
                 }
             }
         }
 
-        // valid only if total seats are positive and even
-        if (seats == 0 || (seats & 1) == 1) return 0;
+        // Invalid if:
+        // 1. No seats exist
+        // 2. Total seats are odd
+        if (seats == 0 || (seats & 1) == 1) {
+            return 0;
+        }
 
         return (int) ways;
     }
