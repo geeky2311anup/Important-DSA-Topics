@@ -119,73 +119,125 @@ Answer → **0** (smaller index wins)
 
 ```java
 class Solution {
+
     public int mostBooked(int rooms, int[][] meetings) {
 
-        // Step 1: Sort all meetings based on their start time
-        // This ensures we process meetings in chronological order
-        Arrays.sort(meetings, (x, y) -> Integer.compare(x[0], y[0]));
+        /*
+           STEP 1:
+           Sort meetings according to start time
+           so meetings are processed in chronological order
+        */
+        Arrays.sort(meetings, (a, b) -> a[0] - b[0]);
 
-        // usage[i] → number of meetings handled by room i
+        /*
+           usage[i]
+           stores how many meetings room i handled
+        */
         int[] usage = new int[rooms];
 
-        // nextFree[i] → the next time room i becomes available
-        // Use long to avoid overflow when times accumulate
+        /*
+           nextFree[i]
+           stores the next time when room i becomes free
+
+           Initially all values are 0,
+           meaning all rooms are free at time 0
+        */
         long[] nextFree = new long[rooms];
 
-        // Step 2: Process each meeting
+        /*
+           STEP 2:
+           Process every meeting one by one
+        */
         for (int[] meet : meetings) {
+
             int start = meet[0];
-            int finish = meet[1];
+            int end = meet[1];
 
-            int chosen = -1; // room chosen for this meeting
+            // Stores selected room index
+            int chosenRoom = -1;
 
-            // Step 2a: Try to find a room that is free at the meeting's start time
-            for (int r = 0; r < rooms; r++) {
-                if (nextFree[r] <= start) {
-                    chosen = r; // room is available
-                    break;      // pick the first available room (smallest index)
+            /*
+               STEP 2A:
+               Find the first available room
+               whose free time <= current meeting start
+            */
+            for (int room = 0; room < rooms; room++) {
+
+                if (nextFree[room] <= start) {
+                    chosenRoom = room;
+                    break;
                 }
             }
 
-            // Step 2b: If no room is free, delay the meeting
-            // to the earliest available room
-            if (chosen == -1) {
+            /*
+               STEP 2B:
+               If no room is free,
+               delay the meeting
+            */
+            if (chosenRoom == -1) {
 
-                long earliest = Long.MAX_VALUE;
+                long earliestTime = Long.MAX_VALUE;
 
-                // Find the room that becomes free the earliest
-                for (int r = 0; r < rooms; r++) {
-                    if (nextFree[r] < earliest) {
-                        earliest = nextFree[r];
-                        chosen = r;
+                /*
+                   Find room which becomes free earliest
+                */
+                for (int room = 0; room < rooms; room++) {
+
+                    if (nextFree[room] < earliestTime) {
+
+                        earliestTime = nextFree[room];
+                        chosenRoom = room;
                     }
                 }
 
-                // Delay the meeting:
-                // new start = earliest free time
-                // new finish = earliest + duration
-                nextFree[chosen] = earliest + (finish - start);
-            } 
-            else {
-                // Room was free at start time, so schedule normally
-                nextFree[chosen] = finish;
+                /*
+                   Delay meeting
+
+                   duration = end - start
+
+                   new end time =
+                   earliest free time + duration
+                */
+                nextFree[chosenRoom] =
+                        earliestTime + (end - start);
             }
 
-            // Step 2c: Increase usage count for that room
-            usage[chosen]++;
+            /*
+               STEP 2C:
+               Room is already free,
+               schedule normally
+            */
+            else {
+                nextFree[chosenRoom] = end;
+            }
+
+            /*
+               Increase usage count
+            */
+            usage[chosenRoom]++;
         }
 
-        // Step 3: Find the room with the highest usage
-        // If tie, return the smallest room index
+        /*
+           STEP 3:
+           Find room with maximum meetings
+        */
         int answer = 0;
+
         for (int i = 1; i < rooms; i++) {
+
+            /*
+               If current room handled more meetings,
+               update answer
+            */
             if (usage[i] > usage[answer]) {
                 answer = i;
             }
         }
 
-        // Step 4: Return the room index with most meetings
+        /*
+           STEP 4:
+           Return room index
+        */
         return answer;
     }
 }
-
