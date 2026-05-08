@@ -63,36 +63,53 @@ class Solution {
         int n = nums1.length;
         int m = nums2.length;
         
+        // dp[i][j] represents the maximum dot product using subsequences 
+        // from nums1[0...i] and nums2[0...j].
         int[][] dp = new int[n][m];
         
-        // Base case
+        // Base case: Only one possible pair (the first elements of both arrays)
         dp[0][0] = nums1[0] * nums2[0];
         
-        // Initialize first row
+        // Initialize first row: 
+        // You can only pick one element from nums1 (nums1[0]), 
+        // so we take the best product found so far with any nums2[j].
         for (int j = 1; j < m; j++) {
             dp[0][j] = Math.max(dp[0][j - 1], nums1[0] * nums2[j]);
         }
         
-        // Initialize first column
+        // Initialize first column:
+        // You can only pick one element from nums2 (nums2[0]),
+        // so we take the best product found so far with any nums1[i].
         for (int i = 1; i < n; i++) {
             dp[i][0] = Math.max(dp[i - 1][0], nums1[i] * nums2[0]);
         }
         
-        // Fill DP table
+        // Fill the DP table
         for (int i = 1; i < n; i++) {
             for (int j = 1; j < m; j++) {
                 int product = nums1[i] * nums2[j];
                 
-                int takeBoth = Math.max(dp[i - 1][j - 1], dp[i - 1][j - 1] + product);
-                takeBoth = Math.max(takeBoth, product);
+                /**
+                 * Logic for 'takeBoth':
+                 * 1. dp[i-1][j-1] + product: Include current product in an existing subsequence sum.
+                 * 2. product: Start a fresh subsequence sum with the current product (ignores negatives).
+                 * 3. dp[i-1][j-1]: This actually handles cases where skipping the current pair is better, 
+                 *    but that's largely covered by the final dp[i-1][j] and dp[i][j-1] checks.
+                 */
+                int currentMaxWithPair = Math.max(product, dp[i - 1][j - 1] + product);
                 
-                dp[i][j] = Math.max(
-                    takeBoth,
-                    Math.max(dp[i - 1][j], dp[i][j - 1])
-                );
+                /**
+                 * Final DP transition:
+                 * 1. currentMaxWithPair: The best sum ending at indices i and j.
+                 * 2. dp[i-1][j]: Max product skipping nums1[i].
+                 * 3. dp[i][j-1]: Max product skipping nums2[j].
+                 */
+                dp[i][j] = Math.max(currentMaxWithPair, 
+                           Math.max(dp[i - 1][j], dp[i][j - 1]));
             }
         }
         
+        // The answer is the max dot product for the full length of both arrays.
         return dp[n - 1][m - 1];
     }
 }
