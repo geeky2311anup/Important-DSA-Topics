@@ -104,8 +104,16 @@ java
 Copy code
 class Solution {
     public int countOdds(int low, int high) {
-        int oddsUpToHigh = (high + 1) >> 1;   // same as (high + 1) / 2
-        int oddsBeforeLow = low >> 1;         // same as low / 2
+
+        // Count of odd numbers from 1 to high
+        // Example: high = 7 → odds are 1,3,5,7 → total = 4
+        int oddsUpToHigh = (high + 1) >> 1;
+
+        // Count of odd numbers before low
+        // Example: low = 3 → numbers before 3 are 1,2 → only 1 odd
+        int oddsBeforeLow = low >> 1;
+
+        // Subtract to get odd numbers in range [low, high]
         return oddsUpToHigh - oddsBeforeLow;
     }
 }
