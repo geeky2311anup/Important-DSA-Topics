@@ -1,53 +1,53 @@
-import java.util.*;
+class Solution {
 
-class Fancy {
-
-    private List<Long> arr;
-    private long mul = 1;
-    private long add = 0;
-    private static final long MOD = 1000000007L;
-
-    public Fancy() {
-        arr = new ArrayList<>();
+    // Checks whether we can jump from index 'from' to index 'to'
+    // A jump is valid if:
+    // 1. from < to
+    // 2. Difference between values is within target limit
+    private boolean canJump(int from, int to, int[] arr, int limit) {
+        return from < to && Math.abs(arr[from] - arr[to]) <= limit;
     }
 
-    public void append(int val) {
-        long inv = modInverse(mul);
-        long stored = ((val - add + MOD) % MOD * inv) % MOD;
-        arr.add(stored);
-    }
+    public int maximumJumps(int[] nums, int target) {
 
-    public void addAll(int inc) {
-        add = (add + inc) % MOD;
-    }
+        int size = nums.length;
 
-    public void multAll(int m) {
-        mul = (mul * m) % MOD;
-        add = (add * m) % MOD;
-    }
+        // best[i] stores the maximum jumps needed
+        // to reach the last index starting from i
+        int[] best = new int[size];
 
-    public int getIndex(int idx) {
-        if (idx >= arr.size()) return -1;
-
-        long val = arr.get(idx);
-        long result = (val * mul % MOD + add) % MOD;
-        return (int) result;
-    }
-
-    private long modInverse(long x) {
-        return power(x, MOD - 2);
-    }
-
-    private long power(long a, long b) {
-        long res = 1;
-        a %= MOD;
-
-        while (b > 0) {
-            if ((b & 1) == 1) res = (res * a) % MOD;
-            a = (a * a) % MOD;
-            b >>= 1;
+        // Initially mark all positions as unreachable
+        for (int k = 0; k < size; k++) {
+            best[k] = -1;
         }
 
-        return res;
+        // Last index needs 0 jumps to reach itself
+        best[size - 1] = 0;
+
+        // Traverse from second last index to first
+        for (int i = size - 2; i >= 0; i--) {
+
+            // Stores maximum jumps possible from current index
+            int answer = -1;
+
+            // Try jumping to every next index
+            for (int j = i + 1; j < size; j++) {
+
+                // Check:
+                // 1. Jump is valid
+                // 2. Destination index can reach end
+                if (canJump(i, j, nums, target) && best[j] != -1) {
+
+                    // Update maximum jumps
+                    answer = Math.max(answer, best[j] + 1);
+                }
+            }
+
+            // Save result for current index
+            best[i] = answer;
+        }
+
+        // Maximum jumps possible from index 0
+        return best[0];
     }
 }
