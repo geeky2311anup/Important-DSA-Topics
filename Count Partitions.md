@@ -104,28 +104,69 @@ Answer = **3**
 
 ```java
 class Solution {
-    public int countPartitions(int[] nums) {
-        int n = nums.length;
-        int sum = 0;
-        int count = 0;
 
-        // compute total sum
-        for (int i = 0; i < n; i++) {
-            sum += nums[i];
+    public int countPartitions(int[] nums) {
+
+        // Length of the array
+        int n = nums.length;
+
+        // Stores total sum of all elements
+        int totalSum = 0;
+
+        // Final answer:
+        // number of valid partitions
+        int validPartitions = 0;
+
+        // ----------------------------------------
+        // Step 1: Calculate total array sum
+        // ----------------------------------------
+        for (int value : nums) {
+            totalSum += value;
         }
 
-        int prefix = 0;
+        // Prefix sum will store sum of left partition
+        int prefixSum = 0;
 
-        // check all split points except last (both parts must be non-empty)
+        // -------------------------------------------------
+        // Step 2: Try every possible partition point
+        // -------------------------------------------------
+        // We stop at n-2 because both partitions
+        // must contain at least one element.
+        //
+        // Example:
+        // nums = [1,2,3,4]
+        //
+        // i = 0  -> [1] | [2,3,4]
+        // i = 1  -> [1,2] | [3,4]
+        // i = 2  -> [1,2,3] | [4]
+        // -------------------------------------------------
         for (int i = 0; i < n - 1; i++) {
-            prefix += nums[i];
 
-            // parity check: (prefix - (sum - prefix)) % 2 == 0
-            if ((prefix - (sum - prefix)) % 2 == 0) {
-                count++;
+            // Add current element to left partition
+            prefixSum += nums[i];
+
+            // Right partition sum
+            int suffixSum = totalSum - prefixSum;
+
+            // Difference between left and right sums
+            int difference = prefixSum - suffixSum;
+
+            // ------------------------------------------------
+            // If difference is even, partition is valid
+            //
+            // Why?
+            // Because:
+            // (leftSum - rightSum) % 2 == 0
+            //
+            // means both sums have same parity
+            // (both even or both odd)
+            // ------------------------------------------------
+            if (difference % 2 == 0) {
+                validPartitions++;
             }
         }
 
-        return count;
+        // Return total valid split count
+        return validPartitions;
     }
 }
